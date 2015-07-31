@@ -22,13 +22,14 @@
 //  OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
 //  OF THE POSSIBILITY OF SUCH DAMAGE.
 
+define (["jquery", "underscore", "../helpers", "../models/smil_iterator", "rangy", 'readium_cfi_js'], function($, _, Helpers, SmilIterator, rangy, epubCfi) {
 /**
  *
  * @param mediaOverlay
  * @param mediaOverlayPlayer
  * @constructor
  */
-ReadiumSDK.Views.MediaOverlayDataInjector = function (mediaOverlay, mediaOverlayPlayer) {
+var MediaOverlayDataInjector = function (mediaOverlay, mediaOverlayPlayer) {
 
     this.attachMediaOverlayData = function ($iframe, spineItem, mediaOverlaySettings) {
 
@@ -50,9 +51,10 @@ ReadiumSDK.Views.MediaOverlayDataInjector = function (mediaOverlay, mediaOverlay
             else {
                 $body.data("mediaOverlayClick", {ping: "pong"});
 
-                var clickEvent = 'ontouchstart' in document.documentElement ? 'touchstart' : 'click';
-                $body.bind(clickEvent, function (event)
+                var touchClickMOEventHandler = function (event)
                 {
+                    //console.debug("MO TOUCH-DOWN: "+event.type);
+                    
                     var elem = $(this)[0]; // body
                     elem = event.target; // body descendant
 
@@ -261,7 +263,18 @@ webkit.messageHandlers.consoledebug.postMessage("MO readaloud attr: " + readalou
 
                     mediaOverlayPlayer.touchInit();
                     return true;
-                });
+                };
+
+                var touchClickMOEventHandler_ = _.debounce(touchClickMOEventHandler, 200);
+                
+                if ('ontouchstart' in document.documentElement)
+                {
+                  $body[0].addEventListener("touchstart", touchClickMOEventHandler_, false);
+                }
+                $body[0].addEventListener("mousedown", touchClickMOEventHandler_, false);
+
+                //var clickEvent = 'ontouchstart' in document.documentElement ? 'touchstart' : 'click';
+                //$body.bind(clickEvent, touchClickMOEventHandler);
             }
         }
 
@@ -309,7 +322,7 @@ webkit.messageHandlers.consoledebug.postMessage("MO readaloud attr: " + readalou
 
                    if (file && fragmentId)
                    {
-                       var textRelativeRef = ReadiumSDK.Helpers.ResolveContentRef(file, smil.href);
+                       var textRelativeRef = Helpers.ResolveContentRef(file, smil.href);
                        var same = textRelativeRef === spineItem.href;
                        if (same)
                        {                       
@@ -320,7 +333,7 @@ webkit.messageHandlers.consoledebug.postMessage("MO readaloud attr: " + readalou
                                webkit.messageHandlers.consoleerror.postMessage("seq.textref !element? " + root.textref);
                            }
 
-                           // var selector = "#" + ReadiumSDK.Helpers.escapeJQuerySelector(fragmentId);
+                           // var selector = "#" + Helpers.escapeJQuerySelector(fragmentId);
                            // var $element = $(selector, element.ownerDocument.documentElement);
                            // if ($element)
                            // {
@@ -344,7 +357,7 @@ webkit.messageHandlers.consoledebug.postMessage("MO readaloud attr: " + readalou
 
 //webkit.messageHandlers.consoledebug.postMessage("[[MO ATTACH]] " + spineItem.idref + " /// " + spineItem.media_overlay_id + " === " + smil.id);
 
-        var iter = new ReadiumSDK.Models.SmilIterator(smil);
+        var iter = new SmilIterator(smil);
         
         var fakeOpfRoot = "/99!";
         var epubCfiPrefix = "epubcfi";
@@ -355,7 +368,7 @@ webkit.messageHandlers.consoledebug.postMessage("MO readaloud attr: " + readalou
 
             if (true) { //iter.currentPar.text.srcFragmentId (includes empty frag ID)
 
-                var textRelativeRef = ReadiumSDK.Helpers.ResolveContentRef(iter.currentPar.text.srcFile, iter.smil.href);
+                var textRelativeRef = Helpers.ResolveContentRef(iter.currentPar.text.srcFile, iter.smil.href);
 
                 var same = textRelativeRef === spineItem.href;
                 if (same) {
@@ -491,7 +504,7 @@ webkit.messageHandlers.consoledebug.postMessage("MO readaloud attr: " + readalou
                         else
                         {
                             $element = $($iframe[0].contentDocument.getElementById(selectId));
-                            //$element = $("#" + ReadiumSDK.Helpers.escapeJQuerySelector(iter.currentPar.text.srcFragmentId), contentDocElement);
+                            //$element = $("#" + Helpers.escapeJQuerySelector(iter.currentPar.text.srcFragmentId), contentDocElement);
                         }
                     }
 
@@ -545,3 +558,6 @@ webkit.messageHandlers.consoledebug.postMessage("MO readaloud attr: " + readalou
         }
     }
 };
+
+return MediaOverlayDataInjector;
+});
