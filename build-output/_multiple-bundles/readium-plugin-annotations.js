@@ -2491,7 +2491,7 @@ var EpubAnnotationsModule = function (contentDocumentDOM, bbPageSetView, annotat
             };
 
         } catch (error) {
-            console.log(error.message);
+            webkit.messageHandlers.consolelog.postMessage(error.message);
         }
     },
 
@@ -2523,7 +2523,7 @@ var EpubAnnotationsModule = function (contentDocumentDOM, bbPageSetView, annotat
             };
 
         } catch (error) {
-            console.log(error.message);
+            webkit.messageHandlers.consolelog.postMessage(error.message);
         }
     },
 
@@ -2550,7 +2550,7 @@ var EpubAnnotationsModule = function (contentDocumentDOM, bbPageSetView, annotat
             };
 
         } catch (error) {
-            console.log(error.message);
+            webkit.messageHandlers.consolelog.postMessage(error.message);
         }
     },
 
@@ -3544,6 +3544,7 @@ EpubAnnotations.ImageAnnotation = Backbone.Model.extend({
 
     return EpubAnnotationsModule;
 });
+
 //  Created by Dmitry Markushevich (dmitrym@evidentpoint.com)
 // 
 //  Copyright (c) 2014 Readium Foundation and/or its licensees. All rights reserved.
@@ -3644,7 +3645,7 @@ When a user clicks on a highlight `annotationClicked` event is dispatched with t
 - annotationdId
 
 
-	> RReader.on('annotationClicked', function(type, idref, cfi, annotationId) { console.log (type, idref, cfi, annotationId)});
+	> RReader.on('annotationClicked', function(type, idref, cfi, annotationId) { webkit.messageHandlers.consolelog .postMessage (type, idref, cfi, annotationId)});
 	Views.ReaderView {on: function, once: function, off: function, trigger: function, listenTo: function???}
 	
 Then when the user clicks on the highlight the following will show up in the console:
@@ -3669,7 +3670,7 @@ var AnnotationsManager = function (proxyObj, options) {
     var annotationCSSUrl = options.annotationCSSUrl;
 
     if (!annotationCSSUrl) {
-        console.warn("WARNING! Annotations CSS not supplied. Highlighting is not going to work.");
+        webkit.messageHandlers.consolewarn.postMessage("WARNING! Annotations CSS not supplied. Highlighting is not going to work.");
     }
 
     _.extend(this, new EventEmitter());

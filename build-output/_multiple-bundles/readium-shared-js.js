@@ -712,8 +712,8 @@ var Spread = function(spine, isSyntheticSpread) {
         }
         else {
 
-            if(position != Spread.POSITION_CENTER) {
-                console.error("Unrecognized position value");
+            if(position != ReadiumSDK.Models.Spread.POSITION_CENTER) {
+                webkit.messageHandlers.consoleerror.postMessage("Unrecognized position value");
             }
 
             self.centerItem = item;
@@ -902,7 +902,7 @@ var SpineItem = function(itemData, index, spine){
             self.page_spread != SpineItem.SPREAD_RIGHT &&
             self.page_spread != SpineItem.SPREAD_CENTER ) {
 
-            console.error(self.page_spread + " is not a recognized spread type");
+            webkit.messageHandlers.consoleerror.postMessage(self.page_spread + " is not a recognized spread type");
         }
 
     }
@@ -1361,8 +1361,9 @@ Helpers.triggerLayout = function ($iframe) {
             }
         }
     }
-    catch (ex) {
-        console.error(ex);
+    catch (ex)
+    {
+        webkit.messageHandlers.consoleerror.postMessage(ex.toString());
     }
 
     try {
@@ -1379,8 +1380,9 @@ Helpers.triggerLayout = function ($iframe) {
             }
         }
     }
-    catch (ex) {
-        console.error(ex);
+    catch (ex)
+    {
+        webkit.messageHandlers.consoleerror.postMessage(ex.toString());
     }
 
     if (doc.body) {
@@ -1455,7 +1457,7 @@ Helpers.deduceSyntheticSpread = function ($viewport, spineItem, settings) {
         //"Reading Systems may use synthetic spreads in specific or all device orientations as part of a display area utilization optimization process."
     }
 
-    console.warn("Helpers.deduceSyntheticSpread: spread properties?!");
+    webkit.messageHandlers.consolewarn.postMessage("Helpers.deduceSyntheticSpread: spread properties?!");
     return 0; // non-forced
 };
 
@@ -1544,8 +1546,9 @@ Helpers.isIframeAlive = function (iframe) {
         w = iframe.contentWindow;
         d = iframe.contentDocument;
     }
-    catch (ex) {
-        console.error(ex);
+    catch (ex)
+    {
+        webkit.messageHandlers.consoleerror.postMessage(ex.toString());
         return false;
     }
 
@@ -2254,7 +2257,7 @@ var CfiNavigationLogic = function($viewport, $iframe, options){
         var foundElement = this.findFirstVisibleElement(topOffset);
 
         if(!foundElement.$element) {
-            console.log("Could not generate CFI no visible element on page");
+            webkit.messageHandlers.consolelog.postMessage("Could not generate CFI no visible element on page");
             return undefined;
         }
 
@@ -2290,7 +2293,7 @@ var CfiNavigationLogic = function($viewport, $iframe, options){
         var $element = EPUBcfi.getTargetElementWithPartialCFI(wrappedCfi, contentDoc, classBlacklist, elementBlacklist, idBlacklist);
 
         if(!$element || $element.length == 0) {
-            console.log("Can't find element for CFI: " + cfi);
+            webkit.messageHandlers.consolelog.postMessage("Can't find element for CFI: " + cfi);
             return undefined;
         }
 
@@ -2314,7 +2317,7 @@ var CfiNavigationLogic = function($viewport, $iframe, options){
         if (options.rectangleBased) {
             pageIndex = findPageByRectangles($element, y);
             if (pageIndex === null) {
-                console.warn('Impossible to locate a hidden element: ', $element);
+                webkit.messageHandlers.consolewarn.postMessage('Impossible to locate a hidden element: ', $element);
                 return 0;
             }
             return pageIndex;
@@ -2378,7 +2381,7 @@ var CfiNavigationLogic = function($viewport, $iframe, options){
                 ret.y = parseInt(terminus.substr(colIx + 1));
             }
             else {
-                console.log("Unexpected terminating step format");
+                webkit.messageHandlers.consolelog.postMessage("Unexpected terminating step format");
             }
 
             ret.cfi = cfi.substring(0, ix);
@@ -3016,7 +3019,7 @@ var OnePageView = function (options, classes, enableBookStyleOverrides, reader) 
     //this is called by scroll_view for reflowable spine item
     this.resizeIFrameToContent = function () {
         var contHeight = getContentDocHeight();
-        //console.log("resizeIFrameToContent: " + contHeight);
+        //webkit.messageHandlers.consolelog.postMessage("resizeIFrameToContent: " + contHeight);
 
         self.setHeight(contHeight);
 
@@ -3097,7 +3100,7 @@ var OnePageView = function (options, classes, enableBookStyleOverrides, reader) 
             return height;
         }
         else if (_$epubHtml) {
-            console.error("getContentDocHeight ??");
+            webkit.messageHandlers.consoleerror.postMessage("getContentDocHeight ??");
 
             var jqueryHeight = _$epubHtml.height();
             return jqueryHeight;
@@ -3250,7 +3253,7 @@ var OnePageView = function (options, classes, enableBookStyleOverrides, reader) 
                     // }
                     //
                     // if (size) {
-                    //     console.warn("Viewport SVG: using viewbox!");
+                    //     webkit.messageHandlers.consolewarn.postMessage("Viewport SVG: using viewbox!");
                     // }
                 }
             }
@@ -3262,7 +3265,7 @@ var OnePageView = function (options, classes, enableBookStyleOverrides, reader) 
             if (content) {
                 size = parseMetaSize(content);
                 if (size) {
-                    console.log("Viewport: using rendition:viewport dimensions");
+                    webkit.messageHandlers.consolelog.postMessage("Viewport: using rendition:viewport dimensions");
                 }
             }
         }
@@ -3278,7 +3281,7 @@ var OnePageView = function (options, classes, enableBookStyleOverrides, reader) 
 
                 var isImage = _currentSpineItem && _currentSpineItem.media_type && _currentSpineItem.media_type.length && _currentSpineItem.media_type.indexOf("image/") == 0;
                 if (!isImage) {
-                    console.warn("Viewport: using img dimensions!");
+                    webkit.messageHandlers.consolewarn.postMessage("Viewport: using img dimensions!");
                 }
             }
             else {
@@ -3311,7 +3314,7 @@ var OnePageView = function (options, classes, enableBookStyleOverrides, reader) 
 
                         isFallbackDimension = true;
 
-                        console.warn("Viewport: using image dimensions!");
+                        webkit.messageHandlers.consolewarn.postMessage("Viewport: using image dimensions!");
                     }
                 }
             }
@@ -3341,7 +3344,7 @@ var OnePageView = function (options, classes, enableBookStyleOverrides, reader) 
 
             isFallbackDimension = true;
 
-            console.warn("Viewport: using browser / e-reader viewport dimensions!");
+            webkit.messageHandlers.consolewarn.postMessage("Viewport: using browser / e-reader viewport dimensions!");
         }
 
         if (size) {
@@ -3385,8 +3388,8 @@ var OnePageView = function (options, classes, enableBookStyleOverrides, reader) 
                         func();
                     }
                     else {
-                        console.error("onIFrameLoad !! doc && win + TIMEOUT");
-                        console.debug(spineItem.href);
+                        webkit.messageHandlers.consoleerror.postMessage("onIFrameLoad !! doc && win + TIMEOUT");
+                        webkit.messageHandlers.consoledebug.postMessage(spineItem.href);
 
                         onIFrameLoad(success);
 
@@ -3411,7 +3414,7 @@ var OnePageView = function (options, classes, enableBookStyleOverrides, reader) 
     //     var parts = viewBoxString.split(' ');
     //
     //     if(parts.length < 4) {
-    //         console.warn(viewBoxString + " value is not valid viewBox size")
+    //          webkit.messageHandlers.consolewarn.postMessage(viewBoxString + " value is not valid viewBox size")
     //         return undefined;
     //     }
     //
@@ -3472,7 +3475,7 @@ var OnePageView = function (options, classes, enableBookStyleOverrides, reader) 
     this.getElementByCfi = function (spineItem, cfi, classBlacklist, elementBlacklist, idBlacklist) {
 
         if (spineItem != _currentSpineItem) {
-            console.error("spine item is not loaded");
+            webkit.messageHandlers.consoleerror.postMessage("spine item is not loaded");
             return undefined;
         }
 
@@ -3483,7 +3486,7 @@ var OnePageView = function (options, classes, enableBookStyleOverrides, reader) 
     this.getElementById = function (spineItem, id) {
 
         if (spineItem != _currentSpineItem) {
-            console.error("spine item is not loaded");
+            webkit.messageHandlers.consoleerror.postMessage("spine item is not loaded");
             return undefined;
         }
 
@@ -3494,7 +3497,7 @@ var OnePageView = function (options, classes, enableBookStyleOverrides, reader) 
     this.getElement = function (spineItem, selector) {
 
         if (spineItem != _currentSpineItem) {
-            console.error("spine item is not loaded");
+            webkit.messageHandlers.consoleerror.postMessage("spine item is not loaded");
             return undefined;
         }
 
@@ -4146,7 +4149,7 @@ var FixedView = function(options, reader){
 
                     //if we a re loading fixed view meta size should be defined
                     if(!pageView.meta_height() || !pageView.meta_width()) {
-                        console.error("Invalid document " + spineItem.href + ": viewport is not specified!");
+                        webkit.messageHandlers.consoleerror.postMessage("Invalid document " + spineItem.href + ": viewport is not specified!");
                     }
 
                     self.emit(Globals.Events.CONTENT_DOCUMENT_LOADED, $iframe, spineItem);
@@ -4236,7 +4239,7 @@ var FixedView = function(options, reader){
             }
         }
 
-        console.error("spine item is not loaded");
+        webkit.messageHandlers.consoleerror.postMessage("spine item is not loaded");
         return undefined;
     };
 
@@ -4252,7 +4255,7 @@ var FixedView = function(options, reader){
             }
         }
 
-        console.error("spine item is not loaded");
+        webkit.messageHandlers.consoleerror.postMessage("spine item is not loaded");
         return undefined;
     };
 
@@ -4268,7 +4271,7 @@ var FixedView = function(options, reader){
             }
         }
 
-        console.error("spine item is not loaded");
+        webkit.messageHandlers.consoleerror.postMessage("spine item is not loaded");
         return undefined;
     };
 
@@ -4286,9 +4289,18 @@ var FixedView = function(options, reader){
 
     this.insureElementVisibility = function(spineItemId, element, initiator) {
 
-        //TODO: during zoom+pan, playing element might not actualy be visible
+        //TODO: during zoom+pan, playing element might not actually be visible
 
-    }
+    };
+
+    this.isElementCfiVisible = function (spineIdRef, contentCfi) {
+        var spineItemFound = _.findWhere(this.getLoadedSpineItems(), {idref: spineIdRef});
+
+        // it is assumed that if the whole spine item page is visible then any element cfi is visible
+        //TODO: during zoom+pan, element cfi might not actually be visible
+        return !!spineItemFound;
+
+    };
 
 };
     return FixedView;
@@ -4395,7 +4407,7 @@ var IFrameLoader = function() {
                 try {
                     mathJax.Hub.Queue(mathJaxCallback);
                 } catch (err) {
-                    console.error("MathJax fail!");
+                    webkit.messageHandlers.consoleerror.postMessage("MathJax fail!");
                     callback();
                 }
                 // Or at an 8 second timeout, which ever comes first
@@ -4481,7 +4493,7 @@ var InternalLinksSupport = function(reader) {
         var absoluteOpfUri = getAbsoluteUriRelativeToSpineItem(hrefUri, spineItem);
 
         if(!absoluteOpfUri) {
-            console.error("Unable to resolve " + hrefUri.href())
+            webkit.messageHandlers.consoleerror.postMessage("Unable to resolve " + hrefUri.href())
             return;
         }
 
@@ -4502,7 +4514,7 @@ var InternalLinksSupport = function(reader) {
             var cfi = splitCfi(fullCfi);
 
             if(!cfi) {
-                console.warn("Unable to split cfi:" + fullCfi);
+                webkit.messageHandlers.consolewarn.postMessage("Unable to split cfi:" + fullCfi);
                 return;
             }
 
@@ -4516,12 +4528,12 @@ var InternalLinksSupport = function(reader) {
                     reader.openSpineItemElementCfi(newSpineItem.idref, cfi.elementCfi, self);
                 }
                 else {
-                    console.warn("Unable to find spineItem with href=" + contentDocRef);
+                    webkit.messageHandlers.consolewarn.postMessage("Unable to find spineItem with href=" + contentDocRef);
                 }
 
             }
             else {
-                console.warn("Unable to find document ref from " +  fullCfi +" cfi");
+                webkit.messageHandlers.consolewarn.postMessage("Unable to find document ref from " +  fullCfi +" cfi");
             }
 
         });
@@ -4544,9 +4556,9 @@ var InternalLinksSupport = function(reader) {
                 callback(result);
             },
             error: function (xhr, status, errorThrown) {
-                console.error('Error when AJAX fetching ' + path);
-                console.error(status);
-                console.error(errorThrown);
+                webkit.messageHandlers.consoleerror.postMessage('Error when AJAX fetching ' + path);
+                webkit.messageHandlers.consoleerror.postMessage(status);
+                webkit.messageHandlers.consoleerror.postMessage(errorThrown.toString());
                 callback();
             }
         });
@@ -4574,7 +4586,7 @@ var InternalLinksSupport = function(reader) {
             var newSpineItem = reader.spine().getItemByHref(pathname);
 
             if(!newSpineItem) {
-                console.error("spine item with href=" + pathname + " not found");
+                webkit.messageHandlers.consoleerror.postMessage("spine item with href=" + pathname + " not found");
                 return;
             }
 
@@ -4693,7 +4705,7 @@ var SmilIterator = function(smil) {
 //    {
 //        if (!this.currentPar)
 //        {
-//            console.debug("Par iterator is out of range");
+//            webkit.messageHandlers.consoledebug.postMessage("Par iterator is out of range");
 //            return;
 //        }
 //
@@ -4707,7 +4719,7 @@ var SmilIterator = function(smil) {
     {
         if (!this.currentPar)
         {
-            console.debug("Par iterator is out of range");
+            webkit.messageHandlers.consoledebug.postMessage("Par iterator is out of range");
             return;
         }
 
@@ -4755,7 +4767,7 @@ var SmilIterator = function(smil) {
     this.next = function() {
 
         if(!this.currentPar) {
-            console.debug("Par iterator is out of range");
+            webkit.messageHandlers.consoledebug.postMessage("Par iterator is out of range");
             return;
         }
 
@@ -4765,7 +4777,7 @@ var SmilIterator = function(smil) {
     this.previous = function() {
 
         if(!this.currentPar) {
-            console.debug("Par iterator is out of range");
+            webkit.messageHandlers.consoledebug.postMessage("Par iterator is out of range");
             return;
         }
 
@@ -4775,7 +4787,7 @@ var SmilIterator = function(smil) {
     this.isLast = function() {
 
         if(!this.currentPar) {
-            console.debug("Par iterator is out of range");
+            webkit.messageHandlers.consoledebug.postMessage("Par iterator is out of range");
             return;
         }
 
@@ -4873,12 +4885,12 @@ var MediaOverlayDataInjector = function (mediaOverlay, mediaOverlayPlayer) {
 
         var $body = $("body", contentDocElement);
         if ($body.length == 0) {
-            console.error("! BODY ???");
+            webkit.messageHandlers.consoleerror.postMessage("! BODY ???");
         }
         else {
             var click = $body.data("mediaOverlayClick");
             if (click) {
-                console.error("[WARN] already mediaOverlayClick");
+                webkit.messageHandlers.consoleerror.postMessage("[WARN] already mediaOverlayClick");
             }
             else {
                 $body.data("mediaOverlayClick", {ping: "pong"});
@@ -4896,7 +4908,7 @@ var MediaOverlayDataInjector = function (mediaOverlay, mediaOverlayPlayer) {
                         return true;
                     }
 
-//console.debug("MO CLICK: " + elem.id);
+//webkit.messageHandlers.consoledebug.postMessage("MO CLICK: " + elem.id);
 
                     var data = undefined;
                     var el = elem;
@@ -4924,19 +4936,19 @@ var MediaOverlayDataInjector = function (mediaOverlay, mediaOverlayPlayer) {
                     {
                         if (el !== elem)
                         {
-//console.log("MO CLICK REDIRECT: " + el.id);
+//webkit.messageHandlers.consolelog.postMessage("MO CLICK REDIRECT: " + el.id);
                         }
 
                         if (!mediaOverlaySettings.mediaOverlaysEnableClick)
                         {
-console.log("MO CLICK DISABLED");
+webkit.messageHandlers.consolelog.postMessage("MO CLICK DISABLED");
                             mediaOverlayPlayer.touchInit();
                             return true;
                         }
 
                         if (inLink)
                         {
-console.log("MO CLICKED LINK");
+webkit.messageHandlers.consolelog.postMessage("MO CLICKED LINK");
                             mediaOverlayPlayer.touchInit();
                             return true;
                         }
@@ -4994,19 +5006,19 @@ console.log("MO CLICKED LINK");
 //                                     range.setStart(event.rangeParent, event.rangeOffset);
 //                                 }
 //                                 
-// console.log("------ 1");
-// console.log(elem.ownerDocument);
-// console.log(event.pageX);
-// console.log(event.pageY);
-// console.log(r.startContainer);
-// console.log(r.startOffset);
-// console.log("------");
+// webkit.messageHandlers.consolelog.postMessage("------ 1");
+// webkit.messageHandlers.consolelog.postMessage(elem.ownerDocument);
+// webkit.messageHandlers.consolelog.postMessage(event.pageX);
+// webkit.messageHandlers.consolelog.postMessage(event.pageY);
+// webkit.messageHandlers.consolelog.postMessage(r.startContainer);
+// webkit.messageHandlers.consolelog.postMessage(r.startOffset);
+// webkit.messageHandlers.consolelog.postMessage("------");
 
                                 var pos = rangy.positionFromPoint(event.pageX, event.pageY, elem.ownerDocument);
-// console.log("------ 2");
-// console.log(pos.node.textContent);
-// console.log(pos.offset);
-// console.log("------");
+// webkit.messageHandlers.consolelog.postMessage("------ 2");
+// webkit.messageHandlers.consolelog.postMessage(pos.node.textContent);
+// webkit.messageHandlers.consolelog.postMessage(pos.offset);
+// webkit.messageHandlers.consolelog.postMessage("------");
 
                                 par = undefined;
                                 
@@ -5019,14 +5031,14 @@ console.log("MO CLICKED LINK");
                 ["cfi-marker", "mo-cfi-highlight"],
                 [],
                 ["MathJax_Message"]);
-//console.log(infoStart);
+//webkit.messageHandlers.consolelog.postMessage(infoStart);
 
                                     var endCFI = "epubcfi(" + p.cfi.partialEndCfi + ")";
                                     var infoEnd = EPUBcfi.getTextTerminusInfoWithPartialCFI(endCFI, elem.ownerDocument,
                 ["cfi-marker", "mo-cfi-highlight"],
                 [],
                 ["MathJax_Message"]);
-//console.log(infoEnd);
+//webkit.messageHandlers.consolelog.postMessage(infoEnd);
 
                                     var range = rangy.createRange(elem.ownerDocument); //createNativeRange
                                     range.setStartAndEnd(
@@ -5036,8 +5048,8 @@ console.log("MO CLICKED LINK");
         
                                     if (range.isPointInRange(pos.node, pos.offset))
                                     {
-// console.log(p.cfi.partialStartCfi);
-// console.log(p.cfi.partialEndCfi);
+// webkit.messageHandlers.consolelog.postMessage(p.cfi.partialStartCfi);
+// webkit.messageHandlers.consolelog.postMessage(p.cfi.partialEndCfi);
                                         // DOUBLE CHECK WITH getClientRects ??
                                         
                                         par = p;
@@ -5047,7 +5059,7 @@ console.log("MO CLICKED LINK");
                             }
                             catch (e)
                             {
-                                console.error(e);
+                                webkit.messageHandlers.consoleerror.postMessage(e.toString());
                             }
                             
                             if (!par)
@@ -5063,7 +5075,7 @@ console.log("MO CLICKED LINK");
 
                         if (el && el != elem && el.nodeName.toLowerCase() === "body" && par && !par.getSmil().id)
                         {
-//console.debug("MO CLICKED BLANK BODY");
+//webkit.messageHandlers.consoledebug.postMessage("MO CLICKED BLANK BODY");
                             mediaOverlayPlayer.touchInit();
                             return true;
                         }
@@ -5080,7 +5092,7 @@ console.log("MO CLICKED LINK");
                         }
                         if (readaloud)
                         {
-console.debug("MO readaloud attr: " + readaloud);
+webkit.messageHandlers.consoledebug.postMessage("MO readaloud attr: " + readaloud);
 
                             var isPlaying = mediaOverlayPlayer.isPlaying();
                             if (readaloud === "start" && !isPlaying ||
@@ -5113,7 +5125,7 @@ console.debug("MO readaloud attr: " + readaloud);
         var smil = mediaOverlay.getSmilBySpineItem(spineItem);
         if (!smil)
         {
-            console.error("NO SMIL?? " + spineItem.idref + " /// " + spineItem.media_overlay_id);
+            webkit.messageHandlers.consoleerror.postMessage("NO SMIL?? " + spineItem.idref + " /// " + spineItem.media_overlay_id);
             return;
         }
 
@@ -5125,7 +5137,7 @@ console.debug("MO readaloud attr: " + readaloud);
             {
                // if (root.element)
                // {
-               //     console.error("WARN: seq.element already set: " + root.textref);
+               //     webkit.messageHandlers.consoleerror.postMessage("WARN: seq.element already set: " + root.textref);
                // }
                    
                if (root.textref)
@@ -5134,21 +5146,21 @@ console.debug("MO readaloud attr: " + readaloud);
                    var file = parts[0];
                    var fragmentId = (parts.length === 2) ? parts[1] : "";
                    // 
-                   // console.debug(root.textref);
-                   // console.debug(fragmentId);
-                   // console.log("---- SHOULD BE EQUAL:");
-                   // console.debug(file);
-                   // console.debug(par.text.srcFile);
+                   // webkit.messageHandlers.consoledebug.postMessage(root.textref);
+                   // webkit.messageHandlers.consoledebug.postMessage(fragmentId);
+                   // webkit.messageHandlers.consolelog.postMessage("---- SHOULD BE EQUAL:");
+                   // webkit.messageHandlers.consoledebug.postMessage(file);
+                   // webkit.messageHandlers.consoledebug.postMessage(par.text.srcFile);
                    // 
                    // if (file !== par.text.srcFile)
                    // {
-                   //     console.error("adjustParToSeqSyncGranularity textref.file !== par.text.srcFile ???");
+                   //     webkit.messageHandlers.consoleerror.postMessage("adjustParToSeqSyncGranularity textref.file !== par.text.srcFile ???");
                    //     return par;
                    // }
                    // 
                    // if (!fragmentId)
                    // {
-                   //     console.error("adjustParToSeqSyncGranularity !fragmentId ???");
+                   //     webkit.messageHandlers.consoleerror.postMessage("adjustParToSeqSyncGranularity !fragmentId ???");
                    //     return par;
                    // }
 
@@ -5162,7 +5174,7 @@ console.debug("MO readaloud attr: " + readaloud);
                    
                            if (!root.element)
                            {
-                               console.error("seq.textref !element? " + root.textref);
+                               webkit.messageHandlers.consoleerror.postMessage("seq.textref !element? " + root.textref);
                            }
 
                            // var selector = "#" + Helpers.escapeJQuerySelector(fragmentId);
@@ -5187,7 +5199,7 @@ console.debug("MO readaloud attr: " + readaloud);
         };
         traverseSmilSeqs(smil);
 
-//console.debug("[[MO ATTACH]] " + spineItem.idref + " /// " + spineItem.media_overlay_id + " === " + smil.id);
+//webkit.messageHandlers.consoledebug.postMessage("[[MO ATTACH]] " + spineItem.idref + " /// " + spineItem.media_overlay_id + " === " + smil.id);
 
         var iter = new SmilIterator(smil);
         
@@ -5219,7 +5231,7 @@ console.debug("MO readaloud attr: " + readaloud);
                             {
                                 partial = partial.substr(fakeOpfRoot.length, partial.length - fakeOpfRoot.length);
                             }
-//console.log(partial);
+//webkit.messageHandlers.consolelog.postMessage(partial);
                             var parts = partial.split(",");
                             if (parts && parts.length === 3)
                             {
@@ -5231,7 +5243,7 @@ console.debug("MO readaloud attr: " + readaloud);
                 ["cfi-marker", "mo-cfi-highlight"],
                 [],
                 ["MathJax_Message"]);
-//console.log(infoStart);
+//webkit.messageHandlers.consolelog.postMessage(infoStart);
 
                                     var partialEndCfi = parts[0] + parts[2];
                                     var endCFI = "epubcfi(" + partialEndCfi + ")";
@@ -5239,7 +5251,7 @@ console.debug("MO readaloud attr: " + readaloud);
                 ["cfi-marker", "mo-cfi-highlight"],
                 [],
                 ["MathJax_Message"]);
-//console.log(infoEnd);
+//webkit.messageHandlers.consolelog.postMessage(infoEnd);
 
                                     var cfiTextParent = infoStart.textNode[0].parentNode;
 
@@ -5271,7 +5283,7 @@ console.debug("MO readaloud attr: " + readaloud);
                                     {
                                         if (modata.par)
                                         {
-                                            console.error("[WARN] non-CFI MO DATA already exists!");
+                                            webkit.messageHandlers.consoleerror.postMessage("[WARN] non-CFI MO DATA already exists!");
                                             modata.par = undefined;
                                         }
 
@@ -5285,7 +5297,7 @@ console.debug("MO readaloud attr: " + readaloud);
                                                 if (par === iter.currentPar)
                                                 {
                                                     found = true;
-                                                    console.error("[WARN] mediaOverlayData CFI PAR already registered!");
+                                                    webkit.messageHandlers.consoleerror.postMessage("[WARN] mediaOverlayData CFI PAR already registered!");
                                                 }
                                             }
                                         }
@@ -5303,7 +5315,7 @@ console.debug("MO readaloud attr: " + readaloud);
                                 }
                                 catch (error)
                                 {
-                                    console.error(error);
+                                    webkit.messageHandlers.consoleerror.postMessage(error.toString());
                                 }
                             }
                             else
@@ -5318,13 +5330,13 @@ console.debug("MO readaloud attr: " + readaloud);
                                 }
                                 catch (error)
                                 {
-                                    console.error(error);
+                                    webkit.messageHandlers.consoleerror.postMessage(error.toString());
                                 }
                             }
                         }
                         else 
                         {
-                            console.error("SMIL text@src CFI fragment identifier scheme not supported: " + iter.currentPar.text.srcFragmentId);
+                            webkit.messageHandlers.consoleerror.postMessage("SMIL text@src CFI fragment identifier scheme not supported: " + iter.currentPar.text.srcFragmentId);
                         }
                     }
                     else
@@ -5345,7 +5357,7 @@ console.debug("MO readaloud attr: " + readaloud);
                         if (!isCfiTextRange)
                         {
                             if (iter.currentPar.element && iter.currentPar.element !== $element[0]) {
-                                console.error("DIFFERENT ELEMENTS??! " + iter.currentPar.text.srcFragmentId + " /// " + iter.currentPar.element.id);
+                                webkit.messageHandlers.consoleerror.postMessage("DIFFERENT ELEMENTS??! " + iter.currentPar.text.srcFragmentId + " /// " + iter.currentPar.element.id);
                             }
 
                             var name = $element[0].nodeName ? $element[0].nodeName.toLowerCase() : undefined;
@@ -5357,10 +5369,10 @@ console.debug("MO readaloud attr: " + readaloud);
 
                             var modata = $element.data("mediaOverlayData");
                             if (modata) {
-                                console.error("[WARN] MO DATA already exists.");
+                                webkit.messageHandlers.consoleerror.postMessage("[WARN] MO DATA already exists.");
 
                                 if (modata.par && modata.par !== iter.currentPar) {
-                                    console.error("DIFFERENT PARS??!");
+                                    webkit.messageHandlers.consoleerror.postMessage("DIFFERENT PARS??!");
                                 }
                             }
 
@@ -5369,7 +5381,7 @@ console.debug("MO readaloud attr: " + readaloud);
                             /*
                              $element.click(function() {
                              var elem = $(this)[0];
-                             console.debug("MO CLICK (ELEM): " + elem.id);
+                             webkit.messageHandlers.consoledebug.postMessage("MO CLICK (ELEM): " + elem.id);
 
                              var par = $(this).data("mediaOverlayData").par;
                              mediaOverlayPlayer.playUserPar(par);
@@ -5378,11 +5390,11 @@ console.debug("MO readaloud attr: " + readaloud);
                         }
                     }
                     else {
-                        console.error("!! CANNOT FIND ELEMENT: " + iter.currentPar.text.srcFragmentId + " == " + iter.currentPar.text.srcFile + " /// " + spineItem.href);
+                        webkit.messageHandlers.consoleerror.postMessage("!! CANNOT FIND ELEMENT: " + iter.currentPar.text.srcFragmentId + " == " + iter.currentPar.text.srcFile + " /// " + spineItem.href);
                     }
                 }
                 else {
-//console.debug("[INFO] " + spineItem.href + " != " + textRelativeRef + " # " + iter.currentPar.text.srcFragmentId);
+//webkit.messageHandlers.consoledebug.postMessage("[INFO] " + spineItem.href + " != " + textRelativeRef + " # " + iter.currentPar.text.srcFragmentId);
                 }
             }
 
@@ -5439,85 +5451,85 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
     {
         _audioElement.addEventListener("load", function()
             {
-                console.debug("0) load");
+                webkit.messageHandlers.consoledebug.postMessage("0) load");
             }
         );
 
         _audioElement.addEventListener("loadstart", function()
             {
-                console.debug("1) loadstart");
+                webkit.messageHandlers.consoledebug.postMessage("1) loadstart");
             }
         );
 
         _audioElement.addEventListener("durationchange", function()
             {
-                console.debug("2) durationchange");
+                webkit.messageHandlers.consoledebug.postMessage("2) durationchange");
             }
         );
 
         _audioElement.addEventListener("loadedmetadata", function()
             {
-                console.debug("3) loadedmetadata");
+                webkit.messageHandlers.consoledebug.postMessage("3) loadedmetadata");
             }
         );
 
         _audioElement.addEventListener("loadeddata", function()
             {
-                console.debug("4) loadeddata");
+                webkit.messageHandlers.consoledebug.postMessage("4) loadeddata");
             }
         );
 
         _audioElement.addEventListener("progress", function()
             {
-                console.debug("5) progress");
+                webkit.messageHandlers.consoledebug.postMessage("5) progress");
             }
         );
 
         _audioElement.addEventListener("canplay", function()
             {
-                console.debug("6) canplay");
+                webkit.messageHandlers.consoledebug.postMessage("6) canplay");
             }
         );
 
         _audioElement.addEventListener("canplaythrough", function()
             {
-                console.debug("7) canplaythrough");
+                webkit.messageHandlers.consoledebug.postMessage("7) canplaythrough");
             }
         );
 
         _audioElement.addEventListener("play", function()
             {
-                console.debug("8) play");
+                webkit.messageHandlers.consoledebug.postMessage("8) play");
             }
         );
 
         _audioElement.addEventListener("pause", function()
             {
-                console.debug("9) pause");
+                webkit.messageHandlers.consoledebug.postMessage("9) pause");
             }
         );
 
         _audioElement.addEventListener("ended", function()
             {
-                console.debug("10) ended");
+                webkit.messageHandlers.consoledebug.postMessage("10) ended");
             }
         );
 
         _audioElement.addEventListener("seeked", function()
             {
-                console.debug("X) seeked");
+                webkit.messageHandlers.consoledebug.postMessage("X) seeked");
             }
         );
 
         _audioElement.addEventListener("timeupdate", function()
             {
-                console.debug("Y) timeupdate");
+                webkit.messageHandlers.consoledebug.postMessage("Y) timeupdate");
             }
         );
 
         _audioElement.addEventListener("seeking", function()
             {
-                console.debug("Z) seeking");
+                webkit.messageHandlers.consoledebug.postMessage("Z) seeking");
             }
         );
     }
@@ -5590,7 +5602,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
         {
             if (DEBUG)
             {
-                console.error("this.play()");
+                webkit.messageHandlers.consoleerror.postMessage("this.play()");
             }
     
             if(!_currentEpubSrc)
@@ -5612,7 +5624,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
         {
             if (DEBUG)
             {
-                console.error("this.pause()");
+                webkit.messageHandlers.consoleerror.postMessage("this.pause()");
             }
     
             stopTimer();
@@ -5642,7 +5654,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
             {
                 if (DEBUG)
                 {
-                    console.debug("onEnded() skipped (still seeking...)");
+                    webkit.messageHandlers.consoledebug.postMessage("onEnded() skipped (still seeking...)");
                 }
     
                 return;
@@ -5671,7 +5683,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
                     {
                         if (DEBUG)
                         {
-//console.debug("interval timer skipped (still seeking...)");
+//webkit.messageHandlers.consoledebug.postMessage("interval timer skipped (still seeking...)");
                         }
                                          
                         _intervalTimerSkips++;
@@ -5690,12 +5702,12 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
                     }
                     catch (ex)
                     {
-                        console.error(ex.message);
+                        webkit.messageHandlers.consoleerror.postMessage(ex.toString());
                     }
     
     //                if (DEBUG)
     //                {
-    //                    console.debug("currentTime: " + currentTime);
+    //                    webkit.messageHandlers.consoledebug.postMessage("currentTime: " + currentTime);
     //                }
     
                     if (currentTime)
@@ -5723,7 +5735,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
         {
             if (DEBUG)
             {
-                console.error("this.reset()");
+                webkit.messageHandlers.consoleerror.postMessage("this.reset()");
             }
     
             this.pause();
@@ -5791,7 +5803,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
                 
                 if (DEBUG)
                 {
-                    console.debug("this.playFile(" + epubSrc + ")" + " @" + seekBegin + " (POSTPONE, SEEKING...)");
+                    webkit.messageHandlers.consoledebug.postMessage("this.playFile(" + epubSrc + ")" + " @" + seekBegin + " (POSTPONE, SEEKING...)");
                 }
     
                 setTimeout(function()
@@ -5806,7 +5818,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
     
             if (DEBUG)
             {
-                console.debug("this.playFile(" + epubSrc + ")" + " @" + seekBegin + " #" + playId);
+                webkit.messageHandlers.consoledebug.postMessage("this.playFile(" + epubSrc + ")" + " @" + seekBegin + " #" + playId);
             }
     
             var audioNeedsNewSrc = !_currentEpubSrc || _currentEpubSrc !== epubSrc;
@@ -5815,7 +5827,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
             {
                 if (DEBUG)
                 {
-                    console.debug("this.playFile() SAME SRC");
+                    webkit.messageHandlers.consoledebug.postMessage("this.playFile() SAME SRC");
                 }
     
                 this.pause();
@@ -5830,9 +5842,9 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
     
             if (DEBUG)
             {
-                console.debug("this.playFile() NEW SRC");
-                console.debug("_currentEpubSrc: " + _currentEpubSrc);
-                console.debug("epubSrc: " + epubSrc);
+                webkit.messageHandlers.consoledebug.postMessage("this.playFile() NEW SRC");
+                webkit.messageHandlers.consoledebug.postMessage("_currentEpubSrc: " + _currentEpubSrc);
+                webkit.messageHandlers.consoledebug.postMessage("epubSrc: " + epubSrc);
             }
     
             this.reset();
@@ -5876,7 +5888,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
         //     
         //     if (DEBUG)
         //     {
-        //         console.debug("onReadyToPlayToForcePreload");
+        //         webkit.messageHandlers.consoledebug.postMessage("onReadyToPlayToForcePreload");
         //     }
         //     
         //     playToForcePreload();
@@ -5886,7 +5898,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
         {
             if (DEBUG)
             {
-                console.debug("playToForcePreload");
+                webkit.messageHandlers.consoledebug.postMessage("playToForcePreload");
             }
             
             //_audioElement.volume = 0;
@@ -5903,7 +5915,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
             
             if (DEBUG)
             {
-                console.debug("onPlayToForcePreload");
+                webkit.messageHandlers.consoledebug.postMessage("onPlayToForcePreload");
             }
             _audioElement.pause(); // note: interval timer continues (immediately follows self.play())
         };
@@ -5913,7 +5925,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
         {
             if (DEBUG)
             {
-                console.debug("onReadyToSeek #" + event.data.playId);
+                webkit.messageHandlers.consoledebug.postMessage("onReadyToSeek #" + event.data.playId);
             }
             playSeekCurrentTime(event.data.seekBegin, event.data.playId, true);
         }
@@ -5929,7 +5941,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
             {
                 if (DEBUG)
                 {
-                    console.debug("onReadyToSeek ANDROID ... waiting a bit ... #" + event.data.playId);
+                    webkit.messageHandlers.consoledebug.postMessage("onReadyToSeek ANDROID ... waiting a bit ... #" + event.data.playId);
                 }
                 
                 //self.play();
@@ -5945,7 +5957,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
         {
             if (DEBUG)
             {
-                console.debug("playSeekCurrentTime() #" + playId);
+                webkit.messageHandlers.consoledebug.postMessage("playSeekCurrentTime() #" + playId);
             }
     
             if (newCurrentTime == 0)
@@ -5957,7 +5969,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
             {
                 if (DEBUG)
                 {
-                    console.debug("playSeekCurrentTime() CONTINUE");
+                    webkit.messageHandlers.consoledebug.postMessage("playSeekCurrentTime() CONTINUE");
                 }
     
                 _audioElement.moSeeking = undefined;
@@ -5969,7 +5981,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
     
             if (DEBUG)
             {
-                console.debug("playSeekCurrentTime() NEED SEEK, EV: " + ev);
+                webkit.messageHandlers.consoledebug.postMessage("playSeekCurrentTime() NEED SEEK, EV: " + ev);
             }
     
             self.pause();
@@ -5982,7 +5994,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
             }
             catch (ex)
             {
-                console.error(ex.message);
+                webkit.messageHandlers.consoleerror.postMessage(ex.toString());
     
                 setTimeout(function()
                 {
@@ -5992,7 +6004,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
                     }
                     catch (ex)
                     {
-                        console.error(ex.message);
+                        webkit.messageHandlers.consoleerror.postMessage(ex.toString());
                     }
                 }, 5);
             }
@@ -6014,7 +6026,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
     
             if (DEBUG)
             {
-                console.debug("onSeeked() #" + event.data.playId + " FIRST? " + notRetry + " EV: " + ev);
+                webkit.messageHandlers.consoledebug.postMessage("onSeeked() #" + event.data.playId + " FIRST? " + notRetry + " EV: " + ev);
             }
     
             var curTime = _audioElement.currentTime;
@@ -6025,7 +6037,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
             {
                 if (DEBUG)
                 {
-                    console.debug("onSeeked() time diff: " + event.data.newCurrentTime + " vs. " + curTime + " ("+diff+")");
+                    webkit.messageHandlers.consoledebug.postMessage("onSeeked() time diff: " + event.data.newCurrentTime + " vs. " + curTime + " ("+diff+")");
                 }
                 
                 if (notRetry)
@@ -6034,7 +6046,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
     
                     // if (DEBUG)
                     // {
-                    //     console.debug("onSeeked() fail => first retry, EV: " + _seekedEvent2);
+                    //     webkit.messageHandlers.consoledebug.postMessage("onSeeked() fail => first retry, EV: " + _seekedEvent2);
                     // }
     
                     event.data.isNewSrc = false;
@@ -6047,7 +6059,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
     
                     if (DEBUG)
                     {
-                        console.debug("onSeeked() FAIL => retry again (timeout)");
+                        webkit.messageHandlers.consoledebug.postMessage("onSeeked() FAIL => retry again (timeout)");
                     }
     
                     setTimeout(function()
@@ -6065,7 +6077,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
                     }
                     catch (ex)
                     {
-                        console.error(ex.message);
+                        webkit.messageHandlers.consoleerror.postMessage(ex.toString());
     
                         setTimeout(function()
                         {
@@ -6075,7 +6087,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
                             }
                             catch (ex)
                             {
-                                console.error(ex.message);
+                                webkit.messageHandlers.consoleerror.postMessage(ex.toString());
                             }
                         }, 4);
                     }
@@ -6085,17 +6097,17 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
             {
                 if (DEBUG)
                 {
-                    console.debug("onSeeked() STATE:");
-                    console.debug(notRetry);
-                    console.debug(event.data.seekRetries);
-                    console.debug(diff);
+                    webkit.messageHandlers.consoledebug.postMessage("onSeeked() STATE:");
+                    webkit.messageHandlers.consoledebug.postMessage(notRetry);
+                    webkit.messageHandlers.consoledebug.postMessage(event.data.seekRetries);
+                    webkit.messageHandlers.consoledebug.postMessage(diff);
                 }
     
                 if (diff >= 1)
                 {
                     if (DEBUG)
                     {
-                        console.debug("onSeeked() ABORT, TRY AGAIN FROM SCRATCH!");
+                        webkit.messageHandlers.consoledebug.postMessage("onSeeked() ABORT, TRY AGAIN FROM SCRATCH!");
                     }
                     
                     var smilSrc = _currentSmilSrc;
@@ -6114,7 +6126,7 @@ define('readium_shared_js/views/audio_player',['jquery'],function($) {
 
                 if (DEBUG)
                 {
-                    console.debug("onSeeked() OKAY => play!");
+                    webkit.messageHandlers.consoledebug.postMessage("onSeeked() OKAY => play!");
                 }
                 
                 event.data.seekRetries = undefined;
@@ -6288,7 +6300,7 @@ var MediaOverlayElementHighlighter = function(reader) {
         
         $userStyle.appendTo($head);
 
-//console.debug($userStyle[0].textContent);
+//webkit.messageHandlers.consoledebug.postMessage($userStyle[0].textContent);
     };
     
     this.highlightElement = function(par, activeClass, playbackActiveClass) {
@@ -6310,9 +6322,9 @@ var MediaOverlayElementHighlighter = function(reader) {
         
         if (_playbackActiveClass && _playbackActiveClass !== "")
         {
-            //console.debug("MO playbackActiveClass: " + _playbackActiveClass);
+            //webkit.messageHandlers.consoledebug.postMessage("MO playbackActiveClass: " + _playbackActiveClass);
             $(element.ownerDocument.documentElement).addClass(_playbackActiveClass);
-            //console.debug("MO playbackActiveClass 2: " + element.ownerDocument.documentElement.classList);
+            //webkit.messageHandlers.consoledebug.postMessage("MO playbackActiveClass 2: " + element.ownerDocument.documentElement.classList);
         }
 
         var $hel = $(element);
@@ -6324,7 +6336,7 @@ var MediaOverlayElementHighlighter = function(reader) {
                 
         if (overrideWithUserStyle || !hasAuthorStyle)
         {
-            //console.debug("MO active NO CLASS: " + _activeClass);
+            //webkit.messageHandlers.consoledebug.postMessage("MO active NO CLASS: " + _activeClass);
 
             if (hasAuthorStyle)
             {
@@ -6337,7 +6349,7 @@ var MediaOverlayElementHighlighter = function(reader) {
         }
         else
         {
-            //console.debug("MO activeClass: " + _activeClass);
+            //webkit.messageHandlers.consoledebug.postMessage("MO activeClass: " + _activeClass);
             $hel.addClass(_activeClass);
         }
         
@@ -6355,15 +6367,15 @@ var MediaOverlayElementHighlighter = function(reader) {
 //             //     cfi = cfi.substring(1);
 //             // }
 // 
-// //console.log(element);
+// //webkit.messageHandlers.consolelog.postMessage(element);
 //         
 //             var firstTextNode = getFirstTextNode(element);
 //             var txtFirst = firstTextNode.textContent;
-// //console.log(txtFirst);
+// //webkit.messageHandlers.consolelog.postMessage(txtFirst);
 // 
 //             var lastTextNode = getLastTextNode(element);
 //             var txtLast = lastTextNode.textContent;
-// //console.log(txtLast);
+// //webkit.messageHandlers.consolelog.postMessage(txtLast);
 //         
 //             var cfi = EPUBcfi.Generator.generateCharOffsetRangeComponent(
 //                     firstTextNode, 
@@ -6383,7 +6395,7 @@ var MediaOverlayElementHighlighter = function(reader) {
 //         }
 //         catch(error)
 //         {
-//             console.error(error);
+//             webkit.messageHandlers.consoleerror.postMessage(error.toString());
 //         
 //             removeHighlight();
 //         }
@@ -6423,14 +6435,14 @@ var MediaOverlayElementHighlighter = function(reader) {
                 ["cfi-marker", "mo-cfi-highlight"],
                 [],
                 ["MathJax_Message"]);
-//console.log(infoStart);
+//webkit.messageHandlers.consolelog.postMessage(infoStart);
 
             var endCFI = "epubcfi(" + _highlightedCfiPar.cfi.partialEndCfi + ")";
             var infoEnd = EPUBcfi.getTextTerminusInfoWithPartialCFI(endCFI, doc,
                 ["cfi-marker", "mo-cfi-highlight"],
                 [],
                 ["MathJax_Message"]);
-//console.log(infoEnd);
+//webkit.messageHandlers.consolelog.postMessage(infoEnd);
             
             _rangyRange.setStartAndEnd(
                 infoStart.textNode[0], infoStart.textOffset,
@@ -6482,7 +6494,7 @@ var MediaOverlayElementHighlighter = function(reader) {
             }
             catch(error)
             {
-                console.error(error);
+                webkit.messageHandlers.consoleerror.postMessage(error.toString());
             }
         }
     };
@@ -6568,20 +6580,20 @@ var MediaOverlayElementHighlighter = function(reader) {
                     var toRemove = undefined;
                     while ((toRemove = doc.getElementById("start-" + HIGHLIGHT_ID)) !== null)
                     {
-            console.log("toRemove START");
-            console.log(toRemove);
+            webkit.messageHandlers.consolelog.postMessage("toRemove START");
+            webkit.messageHandlers.consolelog.postMessage(toRemove);
                         toRemove.parentNode.removeChild(toRemove);
                     }
                     while ((toRemove = doc.getElementById("end-" + HIGHLIGHT_ID)) !== null)
                     {
-            console.log("toRemove END");
-            console.log(toRemove);
+            webkit.messageHandlers.consolelog.postMessage("toRemove END");
+            webkit.messageHandlers.consolelog.postMessage(toRemove);
                         toRemove.parentNode.removeChild(toRemove);
                     }
                 }
                 catch(error)
                 {
-                    console.error(error);
+                    webkit.messageHandlers.consoleerror.postMessage(error.toString());
                 }
             }
             
@@ -6602,18 +6614,18 @@ var MediaOverlayElementHighlighter = function(reader) {
             
             if (_playbackActiveClass && _playbackActiveClass !== "")
             {
-                //console.debug("MO RESET playbackActiveClass: " + _playbackActiveClass);
+                //webkit.messageHandlers.consoledebug.postMessage("MO RESET playbackActiveClass: " + _playbackActiveClass);
                 $(element.ownerDocument.documentElement).removeClass(_playbackActiveClass);
             }
 
             if (_activeClass && _activeClass !== "")
             {
-                //console.debug("MO RESET activeClass: " + _activeClass);
+                //webkit.messageHandlers.consoledebug.postMessage("MO RESET activeClass: " + _activeClass);
                 $(element).removeClass(_activeClass);
             }
             //else
             //{
-                //console.debug("MO RESET active NO CLASS: " + _activeClass);
+                //webkit.messageHandlers.consoledebug.postMessage("MO RESET active NO CLASS: " + _activeClass);
                 $(element).removeClass(DEFAULT_MO_ACTIVE_CLASS);
                 //$(element).css("background", '');
             //}
@@ -6635,7 +6647,7 @@ var MediaOverlayElementHighlighter = function(reader) {
             var element = par.element || (par.cfi ? par.cfi.cfiTextParent : undefined);
             if (!element)
             {
-                console.error("adjustParToSeqSyncGranularity !element ???");
+                webkit.messageHandlers.consoleerror.postMessage("adjustParToSeqSyncGranularity !element ???");
                 return par; // should never happen!
             }
 
@@ -6875,7 +6887,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
                 var diff = scrollPosAfter - scrollPosBefore;
                 if (Math.abs(diff) > 1)
                 {
-                    console.debug("@@@@@@@@@@@@@@@ SCROLL ADJUST (" + msg + ") " + diff + " -- " + pageView.currentSpineItem().href);
+                    webkit.messageHandlers.consoledebug.postMessage("@@@@@@@@@@@@@@@ SCROLL ADJUST (" + msg + ") " + diff + " -- " + pageView.currentSpineItem().href);
                     //_$contentFrame[0].scrollTop = _$contentFrame[0].scrollTop + diff;
                 }
             }
@@ -6960,7 +6972,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
         {
             if (_DEBUG)
             {
-                console.debug("IMMEDIATE SCROLL ADJUST: " + pageView.currentSpineItem().href + " == " + delta);
+                webkit.messageHandlers.consoledebug.postMessage("IMMEDIATE SCROLL ADJUST: " + pageView.currentSpineItem().href + " == " + delta);
             }
             scrollTo(scrollPos + delta);
         }
@@ -6972,7 +6984,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
         {
             if (_DEBUG)
             {
-                console.log("reachStableContentHeight ! win && doc (iFrame disposed?)");
+                webkit.messageHandlers.consolelog.postMessage("reachStableContentHeight ! win && doc (iFrame disposed?)");
             }
 
             if (callback) callback(false);
@@ -7002,7 +7014,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
         {
             if (_DEBUG && tryAgain !== MAX_ATTEMPTS)
             {
-                console.log("tryAgainFunc - " + tryAgain + ": " + href + "  <" + initialContentHeight +" -- "+ previousPolledContentHeight + ">");
+                webkit.messageHandlers.consolelog.postMessage("tryAgainFunc - " + tryAgain + ": " + href + "  <" + initialContentHeight +" -- "+ previousPolledContentHeight + ">");
             }
 
             tryAgain--;
@@ -7010,7 +7022,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
             {
                 if (_DEBUG)
                 {
-                    console.error("tryAgainFunc abort: " + href);
+                    webkit.messageHandlers.consoleerror.postMessage("tryAgainFunc abort: " + href);
                 }
 
                 if (callback) callback(true);
@@ -7045,8 +7057,8 @@ var ScrollView = function (options, isContinuousScroll, reader) {
                         {
                             if (_DEBUG)
                             {
-                                console.log("$$$ IFRAME HEIGHT ADJUST: " + href + "  [" + diff + "]<" + initialContentHeight + " -- " + previousPolledContentHeight + ">");
-                                console.log(msg);
+                                webkit.messageHandlers.consolelog.postMessage("$$$ IFRAME HEIGHT ADJUST: " + href + "  [" + diff + "]<" + initialContentHeight + " -- " + previousPolledContentHeight + ">");
+                                webkit.messageHandlers.consolelog.postMessage(msg);
                             }
 
                             if (updateScroll === 0)
@@ -7071,8 +7083,8 @@ var ScrollView = function (options, isContinuousScroll, reader) {
                                 {
                                     if (_DEBUG)
                                     {
-                                        console.error("## IFRAME HEIGHT ADJUST: " + href + "  [" + newdiff + "]<" + initialContentHeight + " -- "+ previousPolledContentHeight + ">");
-                                        console.log(msg);
+                                        webkit.messageHandlers.consoleerror.postMessage("## IFRAME HEIGHT ADJUST: " + href + "  [" + newdiff + "]<" + initialContentHeight + " -- "+ previousPolledContentHeight + ">");
+                                        webkit.messageHandlers.consolelog.postMessage(msg);
                                     }
 
                                     tryAgainFunc(tryAgain);
@@ -7082,8 +7094,8 @@ var ScrollView = function (options, isContinuousScroll, reader) {
                                 {
                                     if (_DEBUG)
                                     {
-                                        console.log(">> IFRAME HEIGHT ADJUSTED OKAY: " + href + "  ["+diff+"]<" + initialContentHeight + " -- " + previousPolledContentHeight + ">");
-                                        // console.log(msg);
+                                        webkit.messageHandlers.consolelog.postMessage(">> IFRAME HEIGHT ADJUSTED OKAY: " + href + "  ["+diff+"]<" + initialContentHeight + " -- " + previousPolledContentHeight + ">");
+                                        // webkit.messageHandlers.consolelog.postMessage(msg);
                                     }
                                 }
                             }
@@ -7091,7 +7103,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
                             {
                                 if (_DEBUG)
                                 {
-                                    console.log("tryAgainFunc ! win && doc (iFrame disposed?)");
+                                    webkit.messageHandlers.consolelog.postMessage("tryAgainFunc ! win && doc (iFrame disposed?)");
                                 }
 
                                 if (callback) callback(false);
@@ -7101,15 +7113,15 @@ var ScrollView = function (options, isContinuousScroll, reader) {
                         else
                         {
                             //if (_DEBUG)
-                            // console.debug("IFRAME HEIGHT NO NEED ADJUST: " + href);
-                            // console.log(msg);
+                            // webkit.messageHandlers.consoledebug.postMessage("IFRAME HEIGHT NO NEED ADJUST: " + href);
+                            // webkit.messageHandlers.consolelog.postMessage(msg);
                         }
                     }
                     else
                     {
                         if (_DEBUG)
                         {
-                            console.log("tryAgainFunc ! win && doc (iFrame disposed?)");
+                            webkit.messageHandlers.consolelog.postMessage("tryAgainFunc ! win && doc (iFrame disposed?)");
                         }
 
                         if (callback) callback(false);
@@ -7118,7 +7130,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
                 }
                 catch(ex)
                 {
-                    console.error(ex);
+                    webkit.messageHandlers.consoleerror.postMessage(ex);
 
                     if (callback) callback(false);
                     return;
@@ -7186,7 +7198,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
                         reachStableContentHeight(0, newView, $iframe[0], spineItem.href, spineItem.isFixedLayout(), spineItem.isFixedLayout() ? newView.meta_width() : 0, "addToTopOf", continueCallback); // //onIFrameLoad called before this callback, so okay.
                     }
                     else {
-                        console.error("Unable to open 2 " + prevSpineItem.href);
+                        webkit.messageHandlers.consoleerror.postMessage("Unable to open 2 " + prevSpineItem.href);
                         removePageView(newView);
                         callback(false);
                     }
@@ -7194,7 +7206,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
                 });
             }
             else {
-                console.error("Unable to open 1 " + prevSpineItem.href);
+                webkit.messageHandlers.consoleerror.postMessage("Unable to open 1 " + prevSpineItem.href);
                 removePageView(tmpView);
                 callback(false);
             }
@@ -7238,7 +7250,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
                 reachStableContentHeight(2, newView, $iframe[0], spineItem.href, spineItem.isFixedLayout(), spineItem.isFixedLayout() ? newView.meta_width() : 0, "addToBottomOf", continueCallback); // //onIFrameLoad called before this callback, so okay.
             }
             else {
-                console.error("Unable to load " + nexSpineItem.href);
+                webkit.messageHandlers.consoleerror.postMessage("Unable to load " + nexSpineItem.href);
                 callback(false);
             }
 
@@ -7444,7 +7456,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
                 reachStableContentHeight(1, loadedView, $iframe[0], spineItem.href, spineItem.isFixedLayout(), spineItem.isFixedLayout() ? loadedView.meta_width() : 0, "openPage", continueCallback); // //onIFrameLoad called before this callback, so okay.
             }
             else {
-                console.error("Unable to load " + spineItem.href);
+                webkit.messageHandlers.consoleerror.postMessage("Unable to load " + spineItem.href);
 
                 removePageView(loadedView);
                 loadedView = undefined;
@@ -7560,7 +7572,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
             $element = sfiNav.getElementById(pageRequest.elementId);
 
             if (!$element || !$element.length) {
-                console.warn("Element id=" + pageRequest.elementId + " not found!");
+                webkit.messageHandlers.consolewarn.postMessage("Element id=" + pageRequest.elementId + " not found!");
                 return;
             }
 
@@ -7581,7 +7593,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
             $element = sfiNav.getElementByCfi(pageRequest.elementCfi);
 
             if (!$element || !$element.length) {
-                console.warn("Element cfi=" + pageRequest.elementCfi + " not found!");
+                webkit.messageHandlers.consolewarn.postMessage("Element cfi=" + pageRequest.elementCfi + " not found!");
                 return;
             }
 
@@ -7839,7 +7851,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
         }, false);
 
         if (!found) {
-            console.error("spine item is not loaded");
+            webkit.messageHandlers.consoleerror.postMessage("spine item is not loaded");
             return undefined;
         }
 
@@ -7862,7 +7874,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
         }, false);
 
         if (!found) {
-            console.error("spine item is not loaded");
+            webkit.messageHandlers.consoleerror.postMessage("spine item is not loaded");
             return undefined;
         }
 
@@ -8016,7 +8028,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
         }, false);
 
         if (!pageView) {
-            console.warn("Page for element " + element + " not found");
+            webkit.messageHandlers.consolewarn.postMessage("Page for element " + element + " not found");
             return;
         }
 
@@ -8033,7 +8045,12 @@ var ScrollView = function (options, isContinuousScroll, reader) {
             self.openPage(openPageRequest);
         }
 
-    }
+    };
+
+    this.isElementCfiVisible = function (spineIdRef, contentCfi) {
+        // TODO: implement this for scrollable views
+        return false;
+    };
 
 };
 return ScrollView;
@@ -8128,7 +8145,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
 
 
     this.onSettingsApplied = function() {
-//console.debug(_settings);
+//webkit.messageHandlers.consoledebug.postMessage(_settings);
         _audioPlayer.setRate(_settings.mediaOverlaysRate);
         _audioPlayer.setVolume(_settings.mediaOverlaysVolume / 100.0);
     };
@@ -8222,7 +8239,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
                     {
                         partial = partial.substr(fakeOpfRoot.length, partial.length - fakeOpfRoot.length);
                     }
-//console.log(partial);
+//webkit.messageHandlers.consolelog.postMessage(partial);
                     var parts = partial.split(",");
                     if (parts && parts.length === 3)
                     {
@@ -8246,7 +8263,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
                         }
                         catch (error)
                         {
-                            console.error(error);
+                            webkit.messageHandlers.consoleerror.postMessage(error.toString());
                         }
                     }
                     else
@@ -8272,7 +8289,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
                         }
                         catch (error)
                         {
-                            console.error(error);
+                            webkit.messageHandlers.consoleerror.postMessage(error.toString());
                         }
                     }
                 }
@@ -8294,7 +8311,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
                     if (element)
                     {
                         /*
-                        console.error("GREEN: " + paginationData.elementId);
+                        webkit.messageHandlers.consoleerror.postMessage("GREEN: " + paginationData.elementId);
                         lastElement = element;
                         lastElementColor = $(element).css("background-color");
                         $(element).css("background-color", "green");
@@ -8306,7 +8323,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
 
             if (!element)
             {
-                console.error("paginationData.elementId BUT !element: " + paginationData.elementId);
+                webkit.messageHandlers.consoleerror.postMessage("paginationData.elementId BUT !element: " + paginationData.elementId);
             }
         }
 
@@ -8336,21 +8353,21 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
 //
 //            if (!paginationData.elementId)
 //            {
-//                console.error("!paginationData.elementId");
+//                webkit.messageHandlers.consoleerror.postMessage("!paginationData.elementId");
 //                clipBeginOffset = 0.0;
 //                return;
 //            }
 
             if(!element)
             {
-                console.error("!element: " + paginationData.elementId);
+                webkit.messageHandlers.consoleerror.postMessage("!element: " + paginationData.elementId);
                 clipBeginOffset = 0.0;
                 return;
             }
 
             var moData = $(element).data("mediaOverlayData");
             if(!moData) {
-                console.error("!moData: " + paginationData.elementId);
+                webkit.messageHandlers.consoleerror.postMessage("!moData: " + paginationData.elementId);
                 clipBeginOffset = 0.0;
                 return;
             }
@@ -8377,10 +8394,10 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
 
         var noReverseData = !_smilIterator.currentPar.element && !_smilIterator.currentPar.cfi;
         if(noReverseData) {
-            console.error("!! _smilIterator.currentPar.element ??");
+            webkit.messageHandlers.consoleerror.postMessage("!! _smilIterator.currentPar.element ??");
         }
 
-//console.debug("+++> paginationData.elementId: " + paginationData.elementId + " /// " + _smilIterator.currentPar.text.srcFile + " # " + _smilIterator.currentPar.text.srcFragmentId); //PageOpenRequest.elementId
+// webkit.messageHandlers.consoledebug.postMessage("+++> paginationData.elementId: " + paginationData.elementId + " /// " + _smilIterator.currentPar.text.srcFile + " # " + _smilIterator.currentPar.text.srcFragmentId); //PageOpenRequest.elementId
 
 
         if(paginationData.initiator == self)
@@ -8388,7 +8405,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
             var notSameTargetID = paginationData.elementId && paginationData.elementId !== _smilIterator.currentPar.text.srcFragmentId;
 
             if(notSameTargetID) {
-                console.error("!! paginationData.elementId !== _smilIterator.currentPar.text.srcFragmentId");
+                webkit.messageHandlers.consoleerror.postMessage("!! paginationData.elementId !== _smilIterator.currentPar.text.srcFragmentId");
             }
 
             if(notSameTargetID || noReverseData) {
@@ -8447,7 +8464,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
         _smilIterator.goToPar(par);
 
         if(!_smilIterator.currentPar) {
-            console.error("playPar !_smilIterator.currentPar");
+            webkit.messageHandlers.consoleerror.postMessage("playPar !_smilIterator.currentPar");
             return;
         }
 
@@ -8478,7 +8495,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
             }
 
             audioCurrentTime = 0.0;
-//console.log("BLANK END.");
+//webkit.messageHandlers.consolelog.postMessage("BLANK END.");
             //nextSmil(true);
             onAudioPositionChanged(_smilIterator.currentPar.audio.clipEnd + 0.1, 2);
 
@@ -8492,7 +8509,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
         
         if (!_smilIterator || !_smilIterator.currentPar)
         {
-            console.error("playCurrentPar !_smilIterator || !_smilIterator.currentPar ???");
+            webkit.messageHandlers.consoleerror.postMessage("playCurrentPar !_smilIterator || !_smilIterator.currentPar ???");
             return;
         }
 
@@ -8596,14 +8613,14 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
                 ["cfi-marker", "mo-cfi-highlight"],
                 [],
                 ["MathJax_Message"]);
-//console.log(infoStart);
+//webkit.messageHandlers.consolelog.postMessage(infoStart);
 
                 var endCFI = "epubcfi(" + cfi.partialEndCfi + ")";
                 var infoEnd = EPUBcfi.getTextTerminusInfoWithPartialCFI(endCFI, doc,
                 ["cfi-marker", "mo-cfi-highlight"],
                 [],
                 ["MathJax_Message"]);
-//console.log(infoEnd);
+//webkit.messageHandlers.consolelog.postMessage(infoEnd);
 
                 if (rangy)
                 {
@@ -8639,12 +8656,12 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
             var dur = _smilIterator.currentPar.audio.clipEnd - _smilIterator.currentPar.audio.clipBegin;
             if (dur <= 0 || clipBeginOffset > dur)
             {
-                console.error("### MO XXX PAR OFFSET: " + clipBeginOffset + " / " + dur);
+                webkit.messageHandlers.consoleerror.postMessage("### MO XXX PAR OFFSET: " + clipBeginOffset + " / " + dur);
                 clipBeginOffset = 0.0;
             }
             else
             {
-//console.debug("### MO PAR OFFSET: " + clipBeginOffset);
+//webkit.messageHandlers.consoledebug.postMessage("### MO PAR OFFSET: " + clipBeginOffset);
             }
 
             var audioContentRef = Helpers.ResolveContentRef(_smilIterator.currentPar.audio.src, _smilIterator.smil.href);
@@ -8653,7 +8670,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
 
             var startTime = _smilIterator.currentPar.audio.clipBegin + clipBeginOffset;
 
-//console.debug("PLAY START TIME: " + startTime + "("+_smilIterator.currentPar.audio.clipBegin+" + "+clipBeginOffset+")");
+//webkit.messageHandlers.consoledebug.postMessage("PLAY START TIME: " + startTime + "("+_smilIterator.currentPar.audio.clipBegin+" + "+clipBeginOffset+")");
 
             _audioPlayer.playFile(_smilIterator.currentPar.audio.src, audioSource, startTime); //_smilIterator.currentPar.element ? _smilIterator.currentPar.element : _smilIterator.currentPar.cfi.cfiTextParent
         }
@@ -8667,12 +8684,12 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
     {
         self.pause();
 
-//console.debug("current Smil: " + _smilIterator.smil.href + " /// " + _smilIterator.smil.id);
+//webkit.messageHandlers.consoledebug.postMessage("current Smil: " + _smilIterator.smil.href + " /// " + _smilIterator.smil.id);
 
         var nextSmil = goNext ? _package.media_overlay.getNextSmil(_smilIterator.smil) : _package.media_overlay.getPreviousSmil(_smilIterator.smil);
         if(nextSmil) {
 
-//console.debug("nextSmil: " + nextSmil.href + " /// " + nextSmil.id);
+//webkit.messageHandlers.consoledebug.postMessage("nextSmil: " + nextSmil.href + " /// " + nextSmil.id);
 
             _smilIterator = new SmilIterator(nextSmil);
             if(_smilIterator.currentPar) {
@@ -8684,14 +8701,14 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
                     }
                 }
 
-//console.debug("openContentUrl (nextSmil): " + _smilIterator.currentPar.text.src + " -- " + _smilIterator.smil.href);
+//webkit.messageHandlers.consoledebug.postMessage("openContentUrl (nextSmil): " + _smilIterator.currentPar.text.src + " -- " + _smilIterator.smil.href);
 
                 reader.openContentUrl(_smilIterator.currentPar.text.src, _smilIterator.smil.href, self);
             }
         }
         else
         {
-            console.log("No more SMIL");
+            webkit.messageHandlers.consolelog.postMessage("No more SMIL");
             self.reset();
         }
     }
@@ -8740,19 +8757,19 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
         position > DIRECTION_MARK &&
             position <= audio.clipEnd) {
 
-//console.debug("onAudioPositionChanged: " + position);
+//webkit.messageHandlers.consoledebug.postMessage("onAudioPositionChanged: " + position);
             return;
         }
 
         _skipAudioEnded = true;
 
-//console.debug("PLAY NEXT: " + "(" + audio.clipBegin + " -- " + audio.clipEnd + ") [" + from + "] " +  position);
-//console.debug(_smilIterator.currentPar.text.srcFragmentId);
+//webkit.messageHandlers.consoledebug.postMessage("PLAY NEXT: " + "(" + audio.clipBegin + " -- " + audio.clipEnd + ") [" + from + "] " +  position);
+//webkit.messageHandlers.consoledebug.postMessage(_smilIterator.currentPar.text.srcFragmentId);
 
         var isPlaying = _audioPlayer.isPlaying();
         if (isPlaying && from === 6)
         {
-            console.debug("from userNav _audioPlayer.isPlaying() ???");
+            webkit.messageHandlers.consoledebug.postMessage("from userNav _audioPlayer.isPlaying() ???");
         }
 
         var goNext = position > audio.clipEnd;
@@ -8798,7 +8815,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
             //            nextSmil(goNext);
             //        }
 
-//console.debug("NEXT SMIL ON AUDIO POS");
+//webkit.messageHandlers.consoledebug.postMessage("NEXT SMIL ON AUDIO POS");
         
             if (doNotNextSmil)
             {
@@ -8813,7 +8830,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
             return;
         }
 
-//console.debug("ITER: " + _smilIterator.currentPar.text.srcFragmentId);
+//webkit.messageHandlers.consoledebug.postMessage("ITER: " + _smilIterator.currentPar.text.srcFragmentId);
 
         if(!_smilIterator.currentPar.audio) {
             self.pause();
@@ -8836,7 +8853,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
 
             if (skip)
             {
-                console.log("MO SKIP: " + parent.epubtype);
+                webkit.messageHandlers.consolelog.postMessage("MO SKIP: " + parent.epubtype);
 
                 self.pause();
 
@@ -8866,7 +8883,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
 
                         if (!_smilIterator.currentPar)
                         {
-    //console.debug("adjustParToSeqSyncGranularity nextSmil(goNext)");
+    //webkit.messageHandlers.consoledebug.postMessage("adjustParToSeqSyncGranularity nextSmil(goNext)");
 
                             if (doNotNextSmil)
                             {
@@ -8883,7 +8900,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
                         }
                     }
                     
-//console.debug("ADJUSTED: " + _smilIterator.currentPar.text.srcFragmentId);
+//webkit.messageHandlers.consoledebug.postMessage("ADJUSTED: " + _smilIterator.currentPar.text.srcFragmentId);
                     if (!goNext)
                     {
                         var landed = _elementHighlighter.adjustParToSeqSyncGranularity(_smilIterator.currentPar);
@@ -8905,29 +8922,29 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
                                 
                                 if (!_smilIterator.currentPar.hasAncestor(landed))
                                 {
-                                    console.error("adjustParToSeqSyncGranularity !_smilIterator.currentPar.hasAncestor(landed) ???");
+                                    webkit.messageHandlers.consoleerror.postMessage("adjustParToSeqSyncGranularity !_smilIterator.currentPar.hasAncestor(landed) ???");
                                 }
                                 //assert 
                             }
                             else
                             {
-//console.debug("adjustParToSeqSyncGranularity reached begin");
+//webkit.messageHandlers.consoledebug.postMessage("adjustParToSeqSyncGranularity reached begin");
 
                                 _smilIterator.reset();
                                 
                                 if (_smilIterator.currentPar !== innerPar)
                                 {
-                                    console.error("adjustParToSeqSyncGranularity _smilIterator.currentPar !=== innerPar???");
+                                    webkit.messageHandlers.consoleerror.postMessage("adjustParToSeqSyncGranularity _smilIterator.currentPar !=== innerPar???");
                                 }
                             }
 
                             if (!_smilIterator.currentPar)
                             {
-                                console.error("adjustParToSeqSyncGranularity !_smilIterator.currentPar ?????");
+                                webkit.messageHandlers.consoleerror.postMessage("adjustParToSeqSyncGranularity !_smilIterator.currentPar ?????");
                                 _smilIterator.goToPar(backup);
                             }
                             
-//console.debug("ADJUSTED PREV: " + _smilIterator.currentPar.text.srcFragmentId);
+//webkit.messageHandlers.consoledebug.postMessage("ADJUSTED PREV: " + _smilIterator.currentPar.text.srcFragmentId);
                         }
                     }
                 }
@@ -8940,7 +8957,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
                 && position >= _smilIterator.currentPar.audio.clipBegin
                 && position <= _smilIterator.currentPar.audio.clipEnd)
         {
-//console.debug("ONLY highlightCurrentElement");
+//webkit.messageHandlers.consoledebug.postMessage("ONLY highlightCurrentElement");
             highlightCurrentElement();
             return;
         }
@@ -9087,9 +9104,9 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
             i++;
         }
 //
-//console.debug(t.text);
-//        console.debug("----");
-//console.debug(t.markup);
+//webkit.messageHandlers.consoledebug.postMessage(t.text);
+//        webkit.messageHandlers.consoledebug.postMessage("----");
+//webkit.messageHandlers.consoledebug.postMessage(t.markup);
 
         r.text = t.text;
         r.innerHTML_tts = t.markup;
@@ -9154,7 +9171,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
 
         if (!txt && window.speechSynthesis.paused)
         {
-//console.debug("TTS resume");
+//webkit.messageHandlers.consoledebug.postMessage("TTS resume");
             window.speechSynthesis.resume();
 
             return;
@@ -9166,7 +9183,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
         {
             if (_SpeechSynthesisUtterance)
             {
-//console.debug("_SpeechSynthesisUtterance nullify");
+//webkit.messageHandlers.consoledebug.postMessage("_SpeechSynthesisUtterance nullify");
 
                 if (TOKENIZE_TTS)
                 {
@@ -9180,7 +9197,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
                     _SpeechSynthesisUtterance.onboundary = undefined;
     //                 _SpeechSynthesisUtterance.onboundary = function(event)
     //                 {
-    // console.debug("OLD TTS boundary");
+    // webkit.messageHandlers.consoledebug.postMessage("OLD TTS boundary");
     //                 
     //                         event.target.tokenData = undefined;
     //  
@@ -9190,7 +9207,7 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
                 _SpeechSynthesisUtterance.onend = undefined;
 //                 _SpeechSynthesisUtterance.onend = function(event)
 //                 {
-// console.debug("OLD TTS ended");
+// webkit.messageHandlers.consoledebug.postMessage("OLD TTS ended");
 //                     if (TOKENIZE_TTS)
 //                     {
 //                         event.target.tokenData = undefined;
@@ -9200,8 +9217,8 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
                 _SpeechSynthesisUtterance.onerror = undefined;
 //                 _SpeechSynthesisUtterance.onerror = function(event)
 //                 {
-// console.debug("OLD TTS error");
-// //console.debug(event);
+// webkit.messageHandlers.consoledebug.postMessage("OLD TTS error");
+// //webkit.messageHandlers.consoledebug.postMessage(event);
 //                     if (TOKENIZE_TTS)
 //                     {
 //                         event.target.tokenData = undefined;
@@ -9217,13 +9234,13 @@ var MediaOverlayPlayer = function(reader, onStatusChanged) {
 //                _skipTTSEndEvent = true;
 //            }
             
-console.debug("paused: "+window.speechSynthesis.paused);
-console.debug("speaking: "+window.speechSynthesis.speaking);
-console.debug("pending: "+window.speechSynthesis.pending);
+webkit.messageHandlers.consoledebug.postMessage("paused: "+window.speechSynthesis.paused);
+webkit.messageHandlers.consoledebug.postMessage("speaking: "+window.speechSynthesis.speaking);
+webkit.messageHandlers.consoledebug.postMessage("pending: "+window.speechSynthesis.pending);
 
 //             if (!window.speechSynthesis.paused)
 //             {
-// console.debug("TTS pause before speak");
+// webkit.messageHandlers.consoledebug.postMessage("TTS pause before speak");
 //                 window.speechSynthesis.pause();
 //             }
             
@@ -9231,7 +9248,7 @@ console.debug("pending: "+window.speechSynthesis.pending);
             {
                 if (first || window.speechSynthesis.pending)
                 {
-    console.debug("TTS cancel before speak");
+    webkit.messageHandlers.consoledebug.postMessage("TTS cancel before speak");
                     window.speechSynthesis.cancel();
 
                     setTimeout(function()
@@ -9265,8 +9282,8 @@ console.debug("pending: "+window.speechSynthesis.pending);
                             return;
                         }
 
-        console.debug("TTS boundary: " + event.name + " / " + event.charIndex);
-        //console.debug(event);
+        webkit.messageHandlers.consoledebug.postMessage("TTS boundary: " + event.name + " / " + event.charIndex);
+        //webkit.messageHandlers.consoledebug.postMessage(event);
 
                         var tokenised = event.target.tokenData;
                         if (!tokenised || !tokenised.spanMap.hasOwnProperty(event.charIndex))
@@ -9276,13 +9293,13 @@ console.debug("pending: "+window.speechSynthesis.pending);
 
                         if (false && tokenised.lastCharIndex)
                         {
-        //console.debug("TTS lastCharIndex: " + tokenised.lastCharIndex);
+        //webkit.messageHandlers.consoledebug.postMessage("TTS lastCharIndex: " + tokenised.lastCharIndex);
                             var id = 'tts_' + tokenised.spanMap[tokenised.lastCharIndex];
-        //console.debug("TTS lastCharIndex ID: " + id);
+        //webkit.messageHandlers.consoledebug.postMessage("TTS lastCharIndex ID: " + id);
                             var spanPrevious = tokenised.element.querySelector("#"+id);
                             if (spanPrevious)
                             {
-        //console.debug("TTS OFF");
+        //webkit.messageHandlers.consoledebug.postMessage("TTS OFF");
                                 spanPrevious.className = 'tts_off';
                                 //spanPrevious.style.backgroundColor = "white";
                             }
@@ -9293,18 +9310,18 @@ console.debug("pending: "+window.speechSynthesis.pending);
                                 tokenised.element.querySelectorAll(".tts_on"),
                                 function(el)
                                 {
-        console.debug("TTS OFF " + el.id);
+        webkit.messageHandlers.consoledebug.postMessage("TTS OFF " + el.id);
                                     el.className = 'tts_off';
                                 }
                             );
                         }
 
                         var id = 'tts_' + tokenised.spanMap[event.charIndex];
-        console.debug("TTS charIndex ID: " + id);
+        webkit.messageHandlers.consoledebug.postMessage("TTS charIndex ID: " + id);
                         var spanNew = tokenised.element.querySelector("#"+id);
                         if (spanNew)
                         {
-        console.debug("TTS ON");
+        webkit.messageHandlers.consoledebug.postMessage("TTS ON");
                             spanNew.className = 'tts_on';
                             //spanNew.style.backgroundColor = "transparent";
                         }
@@ -9328,8 +9345,8 @@ console.debug("pending: "+window.speechSynthesis.pending);
     //                    return;
     //                }
 
-console.debug("TTS ended");
-    //console.debug(event);
+webkit.messageHandlers.consoledebug.postMessage("TTS ended");
+    //webkit.messageHandlers.consoledebug.postMessage(event);
 
                     if (TOKENIZE_TTS)
                     {
@@ -9349,7 +9366,7 @@ console.debug("TTS ended");
                                     tokenised.element.querySelectorAll(".tts_on"),
                                     function(el)
                                     {
-        console.debug("TTS OFF (end)" + el.id);
+        webkit.messageHandlers.consoledebug.postMessage("TTS OFF (end)" + el.id);
                                         el.className = 'tts_off';
                                     }
                                 );
@@ -9365,7 +9382,7 @@ console.debug("TTS ended");
                         }
                         else
                         {
-    console.debug("TTS end SKIPPED");
+    webkit.messageHandlers.consoledebug.postMessage("TTS end SKIPPED");
                         }
                     }
                     else
@@ -9382,12 +9399,12 @@ console.debug("TTS ended");
                         return;
                     }
 
-console.error("TTS error");
-//console.debug(event);
-console.debug(_SpeechSynthesisUtterance.text);
-console.debug(window.speechSynthesis.paused);
-console.debug(window.speechSynthesis.pending);
-console.debug(window.speechSynthesis.speaking);
+webkit.messageHandlers.consoleerror.postMessage("TTS error");
+//webkit.messageHandlers.consoledebug.postMessage(event);
+webkit.messageHandlers.consoledebug.postMessage(_SpeechSynthesisUtterance.text);
+webkit.messageHandlers.consoledebug.postMessage(window.speechSynthesis.paused);
+webkit.messageHandlers.consoledebug.postMessage(window.speechSynthesis.pending);
+webkit.messageHandlers.consoledebug.postMessage(window.speechSynthesis.speaking);
 
                     if (TOKENIZE_TTS)
                     {
@@ -9404,7 +9421,7 @@ console.debug(window.speechSynthesis.speaking);
                                     tokenised.element.ownerDocument.querySelectorAll(".tts_on"),
                                     function(el)
                                     {
-        console.debug("TTS OFF (error)" + el.id);
+        webkit.messageHandlers.consoledebug.postMessage("TTS OFF (error)" + el.id);
                                         el.className = 'tts_off';
                                     }
                                 );
@@ -9424,12 +9441,12 @@ console.debug(window.speechSynthesis.speaking);
 
                 _SpeechSynthesisUtterance.text = text;
 
-    //console.debug("TTS speak: " + text);
+    //webkit.messageHandlers.consoledebug.postMessage("TTS speak: " + text);
                 window.speechSynthesis.speak(_SpeechSynthesisUtterance);
 
                 if (window.speechSynthesis.paused)
                 {
-console.debug("TTS resume");
+webkit.messageHandlers.consoledebug.postMessage("TTS resume");
                     window.speechSynthesis.resume();
                 }
 
@@ -9449,7 +9466,7 @@ console.debug("TTS resume");
             return;
         }
 
-//console.debug("TTS pause");
+//webkit.messageHandlers.consoledebug.postMessage("TTS pause");
         window.speechSynthesis.pause();
     };
 
@@ -9590,7 +9607,7 @@ console.debug("TTS resume");
         if (_smilIterator.currentPar.text.srcFragmentId && _smilIterator.currentPar.text.srcFragmentId.length > 0)
         {
             if (_smilIterator.currentPar.element) {
-    //console.error(_smilIterator.currentPar.element.id + ": " + _smilIterator.currentPar.audio.clipBegin + " / " + _smilIterator.currentPar.audio.clipEnd);
+    //webkit.messageHandlers.consoleerror.postMessage(_smilIterator.currentPar.element.id + ": " + _smilIterator.currentPar.audio.clipBegin + " / " + _smilIterator.currentPar.audio.clipEnd);
 
                 if (!_elementHighlighter.isElementHighlighted(_smilIterator.currentPar))
                 {
@@ -9633,7 +9650,7 @@ console.debug("textRelativeRef: " + textRelativeRef);
         if (textRelativeRef)
         {
             var textAbsoluteRef = _package.resolveRelativeUrl(textRelativeRef);
-console.debug("textAbsoluteRef: " + textAbsoluteRef);
+webkit.messageHandlers.consoledebug.postMessage("textAbsoluteRef: " + textAbsoluteRef);
         }
         */
 
@@ -9786,7 +9803,7 @@ console.debug("textAbsoluteRef: " + textAbsoluteRef);
         {
             if (!_audioPlayer.play())
             {
-                console.log("Audio player was dead, reactivating...");
+                webkit.messageHandlers.consolelog.postMessage("Audio player was dead, reactivating...");
 
                 this.reset();
                 this.toggleMediaOverlay();
@@ -9828,25 +9845,25 @@ console.debug("textAbsoluteRef: " + textAbsoluteRef);
 
     this.isMediaOverlayAvailable = function() {
 
-//        console.debug("isMediaOverlayAvailable()");
+//        webkit.messageHandlers.consoledebug.postMessage("isMediaOverlayAvailable()");
 //
 //        var now1 = window.performance && window.performance.now ? window.performance.now() : Date.now();
 //
-//        if (console.time)
+//        if (webkit.messageHandlers.consoletime)
 //        {
-//            console.time("MO");
+//            console.time.postMessage("MO");
 //        }
 
         var visibleMediaElement = reader.getFirstVisibleMediaOverlayElement();
 
-//        if (console.timeEnd)
+//        if (webkit.messageHandlers.consoletimeEnd)
 //        {
-//            console.timeEnd("MO");
+//            console.timeEnd.postMessage("MO");
 //        }
 //
 //        var now2 = window.performance && window.performance.now ? window.performance.now() : Date.now();
 //
-//        console.debug(now2 - now1);
+//        webkit.messageHandlers.consoledebug.postMessage(now2 - now1);
 
         return typeof visibleMediaElement !== "undefined";
     };
@@ -9966,7 +9983,7 @@ console.debug("textAbsoluteRef: " + textAbsoluteRef);
 
     this.toggleMediaOverlayRefresh = function(paginationData)
     {
-//console.debug("moData SMIL: " + moData.par.getSmil().href + " // " + + moData.par.getSmil().id);
+//webkit.messageHandlers.consoledebug.postMessage("moData SMIL: " + moData.par.getSmil().href + " // " + + moData.par.getSmil().id);
 
         var spineItems = reader.getLoadedSpineItems();
 
@@ -10007,7 +10024,7 @@ console.debug("textAbsoluteRef: " + textAbsoluteRef);
         {
             if (id)
             {
-                console.error("[WARN] id did not resolve to element?");
+                webkit.messageHandlers.consoleerror.postMessage("[WARN] id did not resolve to element?");
             }
             
             for(var i = (rtl ? (spineItems.length - 1) : 0); (rtl && i >=0) || (!rtl && i < spineItems.length); i += (rtl ? -1: 1))
@@ -10015,7 +10032,7 @@ console.debug("textAbsoluteRef: " + textAbsoluteRef);
                 var spineItem = spineItems[i];
                 if (!spineItem)
                 {
-                    console.error("spineItems[i] is undefined??");
+                    webkit.messageHandlers.consoleerror.postMessage("spineItems[i] is undefined??");
                     continue;
                 }
             
@@ -10586,8 +10603,8 @@ Smil.SeqNode = function(parent) {
                 }
                 if (container.text && (!container.text.manifestItemId || container.text.manifestItemId != smilData.spineItemId))
                 {
-// console.log(container.text);
-// console.log(smilData.spineItemId);
+// webkit.messageHandlers.consolelog.postMessage(container.text);
+// webkit.messageHandlers.consolelog.postMessage(smilData.spineItemId);
                     continue;
                 }
                 
@@ -10789,23 +10806,23 @@ Smil.TextNode = function(parent) {
         var ref = Helpers.ResolveContentRef(src, smilData.href);
 //console.log("ref: " + ref);
         var full = smilData.mo.package.resolveRelativeUrlMO(ref);
-// console.log("full: " + full);
-// console.log("---");
+// webkit.messageHandlers.consolelog.postMessage("full: " + full);
+// webkit.messageHandlers.consolelog.postMessage("---");
         for (var j = 0; j < smilData.mo.package.spine.items.length; j++)
         {
             var item = smilData.mo.package.spine.items[j];
-//console.log("item.href: " + item.href);
+//webkit.messageHandlers.consolelog.postMessage("item.href: " + item.href);
             var url = smilData.mo.package.resolveRelativeUrl(item.href);
-//console.log("url: " + url);
+//webkit.messageHandlers.consolelog.postMessage("url: " + url);
             if (url === full)
             {
-//console.error("FOUND: " + item.idref);
+//webkit.messageHandlers.consoleerror.postMessage("FOUND: " + item.idref);
                 this.manifestItemId = item.idref;
                 return;
             }
         }
         
-        console.error("Cannot set the Media ManifestItemId? " + this.src + " && " + smilData.href);
+        webkit.messageHandlers.consoleerror.postMessage("Cannot set the Media ManifestItemId? " + this.src + " && " + smilData.href);
         
 //        throw "BREAK";
     };
@@ -10901,12 +10918,12 @@ var SmilModel = function() {
         {
             if (_epubtypeSyncs[i] === epubtype)
             {
-//console.debug("hasSync OK: ["+epubtype+"]");
+//webkit.messageHandlers.consoledebug.postMessage("hasSync OK: ["+epubtype+"]");
                 return true;
             }
         }
         
-//console.debug("hasSync??: ["+epubtype+"] " + _epubtypeSyncs);
+//webkit.messageHandlers.consoledebug.postMessage("hasSync??: ["+epubtype+"] " + _epubtypeSyncs);
         return false;
     };
     
@@ -10914,7 +10931,7 @@ var SmilModel = function() {
     {
         if (!epubtypes) return;
         
-//console.debug("addSyncs: "+epubtypes);
+//webkit.messageHandlers.consoledebug.postMessage("addSyncs: "+epubtypes);
 
         var parts = epubtypes.split(' ');
         for (var i = 0; i < parts.length; i++)
@@ -10925,7 +10942,7 @@ var SmilModel = function() {
             {
                 _epubtypeSyncs.push(epubtype);
 
-//console.debug("addSync: "+epubtype);
+//webkit.messageHandlers.consoledebug.postMessage("addSync: "+epubtype);
             }
         }
     };
@@ -10936,7 +10953,7 @@ SmilModel.fromSmilDTO = function(smilDTO, mo) {
 
     if (mo.DEBUG)
     {
-        console.debug("Media Overlay DTO import...");
+        webkit.messageHandlers.consoledebug.postMessage("Media Overlay DTO import...");
     }
 
     var indent = 0;
@@ -10960,7 +10977,7 @@ SmilModel.fromSmilDTO = function(smilDTO, mo) {
     smilModel.duration = smilDTO.duration;
     if (smilModel.duration && smilModel.duration.length && smilModel.duration.length > 0)
     {
-        console.error("SMIL duration is string, parsing float... (" + smilModel.duration + ")");
+        webkit.messageHandlers.consoleerror.postMessage("SMIL duration is string, parsing float... (" + smilModel.duration + ")");
         smilModel.duration = parseFloat(smilModel.duration);
     }
     
@@ -10968,11 +10985,11 @@ SmilModel.fromSmilDTO = function(smilDTO, mo) {
 
     if (smilModel.mo.DEBUG)
     {
-        console.log("JS MO smilVersion=" + smilModel.smilVersion);
-        console.log("JS MO id=" + smilModel.id);
-        console.log("JS MO spineItemId=" + smilModel.spineItemId);
-        console.log("JS MO href=" + smilModel.href);
-        console.log("JS MO duration=" + smilModel.duration);
+        webkit.messageHandlers.consolelog.postMessage("JS MO smilVersion=" + smilModel.smilVersion);
+        webkit.messageHandlers.consolelog.postMessage("JS MO id=" + smilModel.id);
+        webkit.messageHandlers.consolelog.postMessage("JS MO spineItemId=" + smilModel.spineItemId);
+        webkit.messageHandlers.consolelog.postMessage("JS MO href=" + smilModel.href);
+        webkit.messageHandlers.consolelog.postMessage("JS MO duration=" + smilModel.duration);
     }
 
     var safeCopyProperty = function(property, from, to, isRequired) {
@@ -10981,18 +10998,18 @@ SmilModel.fromSmilDTO = function(smilDTO, mo) {
         { // && from[property] !== ""
 
             if( !(property in to) ) {
-                console.debug("property " + property + " not declared in smil node " + to.nodeType);
+                webkit.messageHandlers.consoledebug.postMessage("property " + property + " not declared in smil node " + to.nodeType);
             }
 
             to[property] = from[property];
 
             if (smilModel.mo.DEBUG)
             {
-            console.log(getIndent() + "JS MO: [" + property + "=" + to[property] + "]");
+            webkit.messageHandlers.consolelog.postMessage(getIndent() + "JS MO: [" + property + "=" + to[property] + "]");
             }
         }
         else if(isRequired) {
-            console.log("Required property " + property + " not found in smil node " + from.nodeType);
+            webkit.messageHandlers.consolelog.postMessage("Required property " + property + " not found in smil node " + from.nodeType);
         }
     };
 
@@ -11004,7 +11021,7 @@ SmilModel.fromSmilDTO = function(smilDTO, mo) {
 
             if (smilModel.mo.DEBUG)
             {
-            console.log(getIndent() + "JS MO seq");
+            webkit.messageHandlers.consolelog.postMessage(getIndent() + "JS MO seq");
             }
 
             node = new Smil.SeqNode(parent);
@@ -11026,7 +11043,7 @@ SmilModel.fromSmilDTO = function(smilDTO, mo) {
 
             if (smilModel.mo.DEBUG)
             {
-            console.log(getIndent() + "JS MO par");
+            webkit.messageHandlers.consolelog.postMessage(getIndent() + "JS MO par");
             }
 
             node = new Smil.ParNode(parent);
@@ -11053,7 +11070,7 @@ SmilModel.fromSmilDTO = function(smilDTO, mo) {
                     node.audio = child;
                 }
                 else {
-                    console.error("Unexpected smil node type: " + child.nodeType);
+                    webkit.messageHandlers.consoleerror.postMessage("Unexpected smil node type: " + child.nodeType);
                 }
             }
 
@@ -11077,7 +11094,7 @@ var forceTTS = false; // for testing only!
 
             if (smilModel.mo.DEBUG)
             {
-            console.log(getIndent() + "JS MO text");
+            webkit.messageHandlers.consolelog.postMessage(getIndent() + "JS MO text");
             }
 
             node = new Smil.TextNode(parent);
@@ -11093,7 +11110,7 @@ var forceTTS = false; // for testing only!
 
             if (smilModel.mo.DEBUG)
             {
-            console.log(getIndent() + "JS MO audio");
+            webkit.messageHandlers.consolelog.postMessage(getIndent() + "JS MO audio");
             }
 
             node = new Smil.AudioNode(parent);
@@ -11104,14 +11121,14 @@ var forceTTS = false; // for testing only!
             safeCopyProperty("clipBegin", nodeDTO, node);
             if (node.clipBegin && node.clipBegin.length && node.clipBegin.length > 0)
             {
-                console.error("SMIL clipBegin is string, parsing float... (" + node.clipBegin + ")");
+                webkit.messageHandlers.consoleerror.postMessage("SMIL clipBegin is string, parsing float... (" + node.clipBegin + ")");
                 node.clipBegin = parseFloat(node.clipBegin);
             }
             if (node.clipBegin < 0)
             {
                 if (smilModel.mo.DEBUG)
                 {
-                    console.log(getIndent() + "JS MO clipBegin adjusted to ZERO");
+                    webkit.messageHandlers.consolelog.postMessage(getIndent() + "JS MO clipBegin adjusted to ZERO");
                 }
                 node.clipBegin = 0;
             }
@@ -11119,14 +11136,14 @@ var forceTTS = false; // for testing only!
             safeCopyProperty("clipEnd", nodeDTO, node);
             if (node.clipEnd && node.clipEnd.length && node.clipEnd.length > 0)
             {
-                console.error("SMIL clipEnd is string, parsing float... (" + node.clipEnd + ")");
+                webkit.messageHandlers.consoleerror.postMessage("SMIL clipEnd is string, parsing float... (" + node.clipEnd + ")");
                 node.clipEnd = parseFloat(node.clipEnd);
             }
             if (node.clipEnd <= node.clipBegin)
             {
                 if (smilModel.mo.DEBUG)
                 {
-                    console.log(getIndent() + "JS MO clipEnd adjusted to MAX");
+                    webkit.messageHandlers.consolelog.postMessage(getIndent() + "JS MO clipEnd adjusted to MAX");
                 }
                 node.clipEnd = node.MAX;
             }
@@ -11134,7 +11151,7 @@ var forceTTS = false; // for testing only!
             //node.updateMediaManifestItemId(); ONLY XHTML SPINE ITEMS 
         }
         else {
-            console.error("Unexpected smil node type: " + nodeDTO.nodeType);
+            webkit.messageHandlers.consoleerror.postMessage("Unexpected smil node type: " + nodeDTO.nodeType);
             return undefined;
         }
 
@@ -11288,11 +11305,11 @@ var MediaOverlay = function(package) {
     
     this.positionToPercent = function(smilIndex, parIndex, milliseconds)
     {
-// console.log(">>>>>>>>>>");
-// console.log(milliseconds);
-// console.log(smilIndex);
-// console.log(parIndex);
-// console.log("-------");
+// webkit.messageHandlers.consolelog.postMessage(">>>>>>>>>>");
+// webkit.messageHandlers.consolelog.postMessage(milliseconds);
+// webkit.messageHandlers.consolelog.postMessage(smilIndex);
+// webkit.messageHandlers.consolelog.postMessage(parIndex);
+// webkit.messageHandlers.consolelog.postMessage("-------");
                 
         if (smilIndex >= this.smil_models.length)
         {
@@ -11306,7 +11323,7 @@ var MediaOverlay = function(package) {
             smilDataOffset += sd.durationMilliseconds_Calculated();
         }
 
-//console.log(smilDataOffset);
+//webkit.messageHandlers.consolelog.postMessage(smilDataOffset);
         
         var smilData = this.smil_models[smilIndex];
 
@@ -11318,15 +11335,15 @@ var MediaOverlay = function(package) {
 
         var offset = smilDataOffset + smilData.clipOffset(par) + milliseconds;
 
-//console.log(offset);
+//webkit.messageHandlers.consolelog.postMessage(offset);
         
         var total = this.durationMilliseconds_Calculated();
 
-///console.log(total);
+///webkit.messageHandlers.consolelog.postMessage(total);
 
         var percent = (offset / total) * 100;
 
-//console.log("<<<<<<<<<<< " + percent);
+//webkit.messageHandlers.consolelog.postMessage("<<<<<<<<<<< " + percent);
         
         return percent;
       };
@@ -11355,7 +11372,7 @@ var MediaOverlay = function(package) {
             if(smil.spineItemId === spineItem.idref) {
                 if (spineItem.media_overlay_id !== smil.id)
                 {
-                    console.error("SMIL INCORRECT ID?? " + spineItem.media_overlay_id + " /// " + smil.id);
+                    webkit.messageHandlers.consoleerror.postMessage("SMIL INCORRECT ID?? " + spineItem.media_overlay_id + " /// " + smil.id);
                 }
                 return smil;
             }
@@ -11405,68 +11422,68 @@ MediaOverlay.fromDTO = function(moDTO, package) {
     var mo = new MediaOverlay(package);
 
     if(!moDTO) {
-        console.debug("No Media Overlay.");
+        webkit.messageHandlers.consoledebug.postMessage("No Media Overlay.");
         return mo;
     }
 
-    console.debug("Media Overlay INIT...");
+    webkit.messageHandlers.consoledebug.postMessage("Media Overlay INIT...");
 
     // if (mo.DEBUG)
-    //     console.debug(JSON.stringify(moDTO));
+    //     webkit.messageHandlers.consoledebug.postMessage(JSON.stringify(moDTO));
         
     mo.duration = moDTO.duration;
     if (mo.duration && mo.duration.length && mo.duration.length > 0)
     {
-        console.error("SMIL total duration is string, parsing float... (" + mo.duration + ")");
+        webkit.messageHandlers.consoleerror.postMessage("SMIL total duration is string, parsing float... (" + mo.duration + ")");
         mo.duration = parseFloat(mo.duration);
     }
     if (mo.DEBUG)
-        console.debug("Media Overlay Duration (TOTAL): " + mo.duration);
+        webkit.messageHandlers.consoledebug.postMessage("Media Overlay Duration (TOTAL): " + mo.duration);
 
     mo.narrator = moDTO.narrator;
     if (mo.DEBUG)
-        console.debug("Media Overlay Narrator: " + mo.narrator);
+        webkit.messageHandlers.consoledebug.postMessage("Media Overlay Narrator: " + mo.narrator);
 
     mo.activeClass = moDTO.activeClass;
     if (mo.DEBUG)
-        console.debug("Media Overlay Active-Class: " + mo.activeClass);
+        webkit.messageHandlers.consoledebug.postMessage("Media Overlay Active-Class: " + mo.activeClass);
 
     mo.playbackActiveClass = moDTO.playbackActiveClass;
     if (mo.DEBUG)
-        console.debug("Media Overlay Playback-Active-Class: " + mo.playbackActiveClass);
+        webkit.messageHandlers.consoledebug.postMessage("Media Overlay Playback-Active-Class: " + mo.playbackActiveClass);
 
     var count = moDTO.smil_models.length;
     if (mo.DEBUG)
-        console.debug("Media Overlay SMIL count: " + count);
+        webkit.messageHandlers.consoledebug.postMessage("Media Overlay SMIL count: " + count);
 
     for(var i = 0; i < count; i++) {
         var smilModel = SmilModel.fromSmilDTO(moDTO.smil_models[i], mo);
         mo.smil_models.push(smilModel);
 
         if (mo.DEBUG)
-            console.debug("Media Overlay Duration (SPINE ITEM): " + smilModel.duration);
+            webkit.messageHandlers.consoledebug.postMessage("Media Overlay Duration (SPINE ITEM): " + smilModel.duration);
     }
 
     count = moDTO.skippables.length;
     if (mo.DEBUG)
-        console.debug("Media Overlay SKIPPABLES count: " + count);
+        webkit.messageHandlers.consoledebug.postMessage("Media Overlay SKIPPABLES count: " + count);
 
     for(var i = 0; i < count; i++) {
         mo.skippables.push(moDTO.skippables[i]);
 
         //if (mo.DEBUG)
-        //    console.debug("Media Overlay SKIPPABLE: " + mo.skippables[i]);
+        //    webkit.messageHandlers.consoledebug.postMessage("Media Overlay SKIPPABLE: " + mo.skippables[i]);
     }
 
     count = moDTO.escapables.length;
     if (mo.DEBUG)
-        console.debug("Media Overlay ESCAPABLES count: " + count);
+        webkit.messageHandlers.consoledebug.postMessage("Media Overlay ESCAPABLES count: " + count);
 
     for(var i = 0; i < count; i++) {
         mo.escapables.push(moDTO.escapables[i]);
 
         //if (mo.DEBUG)
-        //    console.debug("Media Overlay ESCAPABLE: " + mo.escapables[i]);
+        //    webkit.messageHandlers.consoledebug.postMessage("Media Overlay ESCAPABLE: " + mo.escapables[i]);
     }
 
     return mo;
@@ -12684,7 +12701,7 @@ var ReflowableView = function(options, reader){
             _$epubHtml.css("column-gap", _paginationInfo.columnGap + "px");
         }
     }
-
+    
     function onIFrameLoad(success) {
         if (!success) {
             applyIFrameLoad(success);
@@ -12702,15 +12719,123 @@ var ReflowableView = function(options, reader){
 
         //while we where loading frame new request came
         if(_deferredPageRequest && _deferredPageRequest.spineItem != _currentSpineItem) {
+            webkit.messageHandlers.consoledebug.postMessage("onIFrameLoad deferred request");
+            
             loadSpineItem(_deferredPageRequest.spineItem);
             return;
         }
-
+        
         if(!success) {
             _$iframe.css("opacity", "1");
             _deferredPageRequest = undefined;
             return;
         }
+        
+        // Add .2 second delay to fix a bug where page count is short by 1
+        // setTimeout(onIFrameLoadDelayed, 200)
+        
+        // Reproduce Bug by using the below timeout instead
+        // - iPhone 6 Simulator
+        // - View Chapter 2 of "Pale Gray for Guilt"
+        // - Swipe back to Chapter 1
+        // - Observe the last page of Chapter 1 is cut-off (21 instead of 22 pages).
+        // - Swiping forward goes to Chapter 2.
+        self.trigger(ReadiumSDK.Events.CONTENT_DOCUMENT_LOADED, _$iframe, _currentSpineItem);
+        
+        var epubContentDocument = _$iframe[0].contentDocument;
+        _$epubHtml = $("html", epubContentDocument);
+        _$htmlBody = $("body", _$epubHtml);
+        
+        // Video surface sometimes (depends on the video codec) disappears from CSS column (i.e. reflow page) during playback (audio continues to play normally, but video canvas is invisible).
+        // Enabling CSS3D fixes this Chrome-specific rendering bug.
+        if(window.chrome
+           && window.navigator.vendor === "Google Inc.") // TODO: Opera (WebKit) sometimes suffers from this rendering bug too (depends on the video codec), but unfortunately GPU-accelerated rendering makes the video controls unresponsive!!
+        {
+            $("video", _$htmlBody).css("transform", "translateZ(0)");
+        }
+        
+        _htmlBodyIsVerticalWritingMode = false;
+        _htmlBodyIsLTRDirection = true;
+        _htmlBodyIsLTRWritingMode = undefined;
+        
+        var win = _$iframe[0].contentDocument.defaultView || _$iframe[0].contentWindow;
+        
+        //Helpers.isIframeAlive
+        var htmlBodyComputedStyle = win.getComputedStyle(_$htmlBody[0], null);
+        if (htmlBodyComputedStyle)
+        {
+            _htmlBodyIsLTRDirection = htmlBodyComputedStyle.direction === "ltr";
+            
+            var writingMode = undefined;
+            if (htmlBodyComputedStyle.getPropertyValue)
+            {
+                writingMode = htmlBodyComputedStyle.getPropertyValue("-webkit-writing-mode") || htmlBodyComputedStyle.getPropertyValue("-moz-writing-mode") || htmlBodyComputedStyle.getPropertyValue("-ms-writing-mode") || htmlBodyComputedStyle.getPropertyValue("-o-writing-mode") || htmlBodyComputedStyle.getPropertyValue("-epub-writing-mode") || htmlBodyComputedStyle.getPropertyValue("writing-mode");
+            }
+            else
+            {
+                writingMode = htmlBodyComputedStyle.webkitWritingMode || htmlBodyComputedStyle.mozWritingMode || htmlBodyComputedStyle.msWritingMode || htmlBodyComputedStyle.oWritingMode || htmlBodyComputedStyle.epubWritingMode || htmlBodyComputedStyle.writingMode;
+            }
+            
+            if (writingMode)
+            {
+                _htmlBodyIsLTRWritingMode = writingMode.indexOf("-lr") >= 0; // || writingMode.indexOf("horizontal-") >= 0; we need explicit!
+                
+                if (writingMode.indexOf("vertical") >= 0 || writingMode.indexOf("tb-") >= 0 || writingMode.indexOf("bt-") >= 0)
+                {
+                    _htmlBodyIsVerticalWritingMode = true;
+                }
+            }
+        }
+        
+        if (_htmlBodyIsLTRDirection)
+        {
+            if (_$htmlBody[0].getAttribute("dir") === "rtl" || _$epubHtml[0].getAttribute("dir") === "rtl")
+            {
+                _htmlBodyIsLTRDirection = false;
+            }
+        }
+        
+        // Some EPUBs may not have explicit RTL content direction (via CSS "direction" property or @dir attribute) despite having a RTL page progression direction. Readium consequently tweaks the HTML in order to restore the correct block flow in the browser renderer, resulting in the appropriate CSS columnisation (which is used to emulate pagination).
+        if (!_spine.isLeftToRight() && _htmlBodyIsLTRDirection && !_htmlBodyIsVerticalWritingMode)
+        {
+            _$htmlBody[0].setAttribute("dir", "rtl");
+            _htmlBodyIsLTRDirection = false;
+            _htmlBodyIsLTRWritingMode = false;
+        }
+        
+        _paginationInfo.isVerticalWritingMode = _htmlBodyIsVerticalWritingMode;
+        
+        hideBook();
+        _$iframe.css("opacity", "1");
+        
+        updateViewportSize();
+        _$epubHtml.css("height", _lastViewPortSize.height + "px");
+        
+        _$epubHtml.css("position", "relative");
+        _$epubHtml.css("margin", "0");
+        _$epubHtml.css("padding", "0");
+        
+        _$epubHtml.css("column-axis", (_htmlBodyIsVerticalWritingMode ? "vertical" : "horizontal"));
+        
+        //
+        // /////////
+        // //Columns Debugging
+        //
+        //     _$epubHtml.css("column-rule-color", "red");
+        //     _$epubHtml.css("column-rule-style", "dashed");
+        //     _$epubHtml.css("column-rule-width", "1px");
+        // _$epubHtml.css("background-color", '#b0c4de');
+        //
+        // ////
+        
+        self.applyBookStyles();
+        resizeImages();
+        
+        updateHtmlFontSize();
+        updateColumnGap();
+        
+        
+        self.applyStyles();
 
         self.emit(Globals.Events.CONTENT_DOCUMENT_LOADED, _$iframe, _currentSpineItem);
 
@@ -12849,7 +12974,7 @@ var ReflowableView = function(options, reader){
         self.openPage(deferredData);
 
     }
-
+	
     this.openPage = function(pageRequest) {
 
         if(_isWaitingFrameRender) {
@@ -12880,11 +13005,14 @@ var ReflowableView = function(options, reader){
                     ["cfi-marker", "mo-cfi-highlight"],
                     [],
                     ["MathJax_Message"]);
+				
+				// This is producing an undefined TypeError when a bookmark is loaded, not sure why
+//				webkit.messageHandlers.cfi.postMessage({idref: pageRequest.spineItem.idref, cfi: pageRequest.elementCfi, pageIndex: pageIndex});
             }
             catch (e)
             {
                 pageIndex = 0;
-                console.error(e);
+                webkit.messageHandlers.consoleerror.postMessage(e.toString());
             }
         }
         else if(pageRequest.firstPage) {
@@ -12894,7 +13022,7 @@ var ReflowableView = function(options, reader){
             pageIndex = _paginationInfo.columnCount - 1;
         }
         else {
-            console.debug("No criteria in pageRequest");
+            webkit.messageHandlers.consoledebug.postMessage("No criteria in pageRequest");
             pageIndex = 0;
         }
 
@@ -12903,7 +13031,7 @@ var ReflowableView = function(options, reader){
             onPaginationChanged(pageRequest.initiator, pageRequest.spineItem, pageRequest.elementId);
         }
         else {
-            console.log('Illegal pageIndex value: ', pageIndex, 'column count is ', _paginationInfo.columnCount);
+            webkit.messageHandlers.consolelog.postMessage('Illegal pageIndex value: ', pageIndex, 'column count is ', _paginationInfo.columnCount);
         }
     };
 
@@ -13013,13 +13141,13 @@ var ReflowableView = function(options, reader){
         var forced = (isDoublePageSyntheticSpread === false) || (isDoublePageSyntheticSpread === true);
         // excludes 0 and 1 falsy/truthy values which denote non-forced result
 
-// console.debug("isDoublePageSyntheticSpread: " + isDoublePageSyntheticSpread);
-// console.debug("forced: " + forced);
+// webkit.messageHandlers.consoledebug.postMessage("isDoublePageSyntheticSpread: " + isDoublePageSyntheticSpread);
+// webkit.messageHandlers.consoledebug.postMessage("forced: " + forced);
 //
         if (isDoublePageSyntheticSpread === 0)
         {
             isDoublePageSyntheticSpread = 1; // try double page, will shrink if doesn't fit
-// console.debug("TRYING SPREAD INSTEAD OF SINGLE...");
+// webkit.messageHandlers.consoledebug.postMessage("TRYING SPREAD INSTEAD OF SINGLE...");
         }
 
         _paginationInfo.visibleColumnCount = isDoublePageSyntheticSpread ? 2 : 1;
@@ -13030,7 +13158,7 @@ var ReflowableView = function(options, reader){
             isDoublePageSyntheticSpread = false;
             forced = true;
             _paginationInfo.visibleColumnCount = 1;
-// console.debug("Vertical Writing Mode => single CSS column, but behaves as if two-page spread");
+// webkit.messageHandlers.consoledebug.postMessage("Vertical Writing Mode => single CSS column, but behaves as if two-page spread");
         }
 
         if(!_$epubHtml) {
@@ -13061,7 +13189,7 @@ var ReflowableView = function(options, reader){
 //             {
 //                 fontSize = htmlBodyComputedStyle.fontSize;
 //             }
-// console.debug(fontSize);
+// webkit.messageHandlers.consoledebug.postMessage(fontSize);
 //         }
 
         if (_viewSettings.fontSize)
@@ -13080,12 +13208,12 @@ var ReflowableView = function(options, reader){
 
         if (textWidth > MAXW)
         {
-// console.debug("LIMITING WIDTH");
+// webkit.messageHandlers.consoledebug.postMessage("LIMITING WIDTH");
             filler = Math.floor((textWidth - MAXW) * (isDoublePageSyntheticSpread ? 1 : 0.5));
         }
         else if (!forced && textWidth < MINW && isDoublePageSyntheticSpread)
         {
-//console.debug("REDUCING SPREAD TO SINGLE");
+//webkit.messageHandlers.consoledebug.postMessage("REDUCING SPREAD TO SINGLE");
             isDoublePageSyntheticSpread = false;
             _paginationInfo.visibleColumnCount = 1;
 
@@ -13136,7 +13264,8 @@ var ReflowableView = function(options, reader){
         Helpers.triggerLayout(_$iframe);
 
         _paginationInfo.columnCount = ((_htmlBodyIsVerticalWritingMode ? _$epubHtml[0].scrollHeight : _$epubHtml[0].scrollWidth) + _paginationInfo.columnGap) / (_paginationInfo.columnWidth + _paginationInfo.columnGap);
-        _paginationInfo.columnCount = Math.round(_paginationInfo.columnCount);
+        // BPY stupid fix to make sure that most of the chapters don't get get off due to the font-face bug.
+        _paginationInfo.columnCount = Math.round(_paginationInfo.columnCount) + 1;
 
         var totalGaps = (_paginationInfo.columnCount-1) * _paginationInfo.columnGap;
         var colWidthCheck = ((_htmlBodyIsVerticalWritingMode ? _$epubHtml[0].scrollHeight : _$epubHtml[0].scrollWidth) - totalGaps) / _paginationInfo.columnCount;
@@ -13144,9 +13273,9 @@ var ReflowableView = function(options, reader){
 
         if (colWidthCheck > _paginationInfo.columnWidth)
         {
-            console.debug("ADJUST COLUMN");
-            console.log(_paginationInfo.columnWidth);
-            console.log(colWidthCheck);
+            webkit.messageHandlers.consoledebug.postMessage("ADJUST COLUMN");
+            webkit.messageHandlers.consolelog.postMessage(_paginationInfo.columnWidth);
+            webkit.messageHandlers.consolelog.postMessage(colWidthCheck);
 
             _paginationInfo.columnWidth = colWidthCheck;
         }
@@ -13207,6 +13336,27 @@ var ReflowableView = function(options, reader){
         _currentOpacity = -1;
     }
 
+	this.getPageIndexForElementCfi = function(spineIdRef, elementCfi) {
+		if (_currentSpineItem.idref != spineIdRef)
+			return undefined;
+		
+		var pageIndex;
+		try
+		{
+			pageIndex = _navigationLogic.getPageForElementCfi(elementCfi,
+															  ["cfi-marker", "mo-cfi-highlight"],
+															  [],
+															  ["MathJax_Message"]);
+		}
+		catch (e)
+		{
+			pageIndex = 0;
+			webkit.messageHandlers.consoleerror.postMessage(e.toString());
+		}
+		
+		return pageIndex;
+	}
+	
     this.getFirstVisibleElementCfi = function() {
 
         var contentOffsets = getVisibleContentOffsets();
@@ -13307,7 +13457,7 @@ var ReflowableView = function(options, reader){
     this.getElementByCfi = function(spineItem, cfi, classBlacklist, elementBlacklist, idBlacklist) {
 
         if(spineItem != _currentSpineItem) {
-            console.error("spine item is not loaded");
+            webkit.messageHandlers.consoleerror.postMessage("spine item is not loaded");
             return undefined;
         }
 
@@ -13317,7 +13467,7 @@ var ReflowableView = function(options, reader){
     this.getElementById = function(spineItem, id) {
 
         if(spineItem != _currentSpineItem) {
-            console.error("spine item is not loaded");
+            webkit.messageHandlers.consoleerror.postMessage("spine item is not loaded");
             return undefined;
         }
 
@@ -13327,7 +13477,7 @@ var ReflowableView = function(options, reader){
     this.getElement = function(spineItem, selector) {
 
         if(spineItem != _currentSpineItem) {
-            console.error("spine item is not loaded");
+            webkit.messageHandlers.consoleerror.postMessage("spine item is not loaded");
             return undefined;
         }
 
@@ -13379,7 +13529,14 @@ var ReflowableView = function(options, reader){
         }
 
         self.openPage(openPageRequest);
-    }
+    };
+
+    this.isElementCfiVisible = function(spineIdRef, contentCfi) {
+        if (spineIdRef != _currentSpineItem.idref) {
+            return false;
+        }
+        return _navigationLogic.isElementCfiVisible(contentCfi);
+    };
 
 };
     return ReflowableView;
@@ -13587,7 +13744,7 @@ Switches.apply = function(dom) {
         if(!ns) {
             // the namespace was not specified, that should
             // never happen, we don't support it then
-            console.log("Encountered a case statement with no required-namespace");
+            webkit.messageHandlers.consolelog.postMessage("Encountered a case statement with no required-namespace");
             return false;
         }
         // all the xmlns that readium is known to support
@@ -13708,7 +13865,7 @@ Trigger.prototype.execute = function(dom) {
             $target[0].muted = false;
             break;
         default:
-            console.log("do not no how to handle trigger " + this.action);
+            webkit.messageHandlers.consolelog.postMessage("do not no how to handle trigger " + this.action);
     }
 };
     return Trigger;
@@ -13791,10 +13948,10 @@ var ReaderView = function (options) {
 
     if (options.el instanceof $) {
         _$el = options.el;
-        console.log("** EL is a jQuery selector:" + options.el.attr('id'));
+        webkit.messageHandlers.consolelog.postMessage("** EL is a jQuery selector:" + options.el.attr('id'));
     } else {
         _$el = $(options.el);
-        console.log("** EL is a string:" + _$el.attr('id'));
+        webkit.messageHandlers.consolelog.postMessage("** EL is a string:" + _$el.attr('id'));
     }
 
     if (options.iframeLoader) {
@@ -13872,7 +14029,7 @@ var ReaderView = function (options) {
             return ReaderView.VIEW_TYPE_SCROLLED_DOC;
         }
 
-        console.error("Unrecognized view type");
+        webkit.messageHandlers.consoleerror.postMessage("Unrecognized view type");
         return undefined;
     };
 
@@ -14105,7 +14262,7 @@ var ReaderView = function (options) {
                 pageRequestData = openBookData.openPageRequest;
             }
             else {
-                console.log("Invalid page request data: idref required!");
+                webkit.messageHandlers.consolelog.postMessage("Invalid page request data: idref required!");
             }
         }
 
@@ -14131,8 +14288,8 @@ var ReaderView = function (options) {
                     fallback = !self.openContentUrl(pageRequestData.contentRefUrl, pageRequestData.sourceFileHref, self);
                 }
             } catch (err) {
-                console.error("openPageRequest fail: fallback to first page!")
-                console.log(err);
+                webkit.messageHandlers.consoleerror.postMessage("openPageRequest fail: fallback to first page!")
+                webkit.messageHandlers.consolelog.postMessage(err);
                 fallback = true;
             }
         }
@@ -14248,7 +14405,7 @@ var ReaderView = function (options) {
      */
     this.updateSettings = function (settingsData) {
 
-//console.debug("UpdateSettings: " + JSON.stringify(settingsData));
+//webkit.messageHandlers.consoledebug.postMessage("UpdateSettings: " + JSON.stringify(settingsData));
 
         _viewerSettings.update(settingsData);
 
@@ -14374,13 +14531,13 @@ var ReaderView = function (options) {
 
         if (!idref) {
 
-            console.log("idref parameter value missing!");
+            webkit.messageHandlers.consolelog.postMessage("idref parameter value missing!");
             return undefined;
         }
 
         var spineItem = _spine.getItemById(idref);
         if (!spineItem) {
-            console.log("Spine item with id " + idref + " not found!");
+            webkit.messageHandlers.consolelog.postMessage("Spine item with id " + idref + " not found!");
             return undefined;
         }
 
@@ -14636,14 +14793,14 @@ var ReaderView = function (options) {
 
         var spineItem = _spine.getItemByHref(hrefPart);
         if (!spineItem) {
-            console.warn('spineItem ' + hrefPart + ' not found');
+            webkit.messageHandlers.consolewarn.postMessage('spineItem ' + hrefPart + ' not found');
             // sometimes that happens because spine item's URI gets encoded,
             // yet it's compared with raw strings by `getItemByHref()` -
             // so we try to search with decoded link as well
             var decodedHrefPart = decodeURIComponent(hrefPart);
             spineItem = _spine.getItemByHref(decodedHrefPart);
             if (!spineItem) {
-                console.warn('decoded spineItem ' + decodedHrefPart + ' missing as well');
+                webkit.messageHandlers.consolewarn.postMessage('decoded spineItem ' + decodedHrefPart + ' missing as well');
                 return false;
             }
         }
@@ -14903,6 +15060,23 @@ var ReaderView = function (options) {
     this.addIFrameEventListener = function (eventName, callback, context) {
         _iframeLoader.addIFrameEventListener(eventName, callback, context);
     };
+	
+	/**
+	 * Spine item must be open
+	 */
+	this.getPageIndexForElementCfi = function(spineIdRef, elementCfi) {
+		if (!_currentView) {
+			return false;
+		}
+		return _currentView.getPageIndexForElementCfi(spineIdRef, elementCfi);
+	}
+	
+    this.isElementCfiVisible = function (spineIdRef, contentCfi) {
+        if (!_currentView) {
+            return false;
+        }
+        return _currentView.isElementCfiVisible(spineIdRef, contentCfi);
+    };
 
     var BackgroundAudioTrackManager = function () {
         var _spineItemIframeMap = {};
@@ -14936,7 +15110,7 @@ var ReaderView = function (options) {
                     var data = _spineItemIframeMap[prop];
                     if (!data || !data.active) continue;
 
-                    if ($iframe) console.error("More than one active iframe?? (pagination)");
+                    if ($iframe) webkit.messageHandlers.consoleerror.postMessage("More than one active iframe?? (pagination)");
 
                     $iframe = data["$iframe"];
                     if (!$iframe) continue;
@@ -14963,7 +15137,7 @@ var ReaderView = function (options) {
                 }
             }
             catch (err) {
-                console.error(err);
+                webkit.messageHandlers.consoleerror.postMessage(err);
             }
         };
 
@@ -14974,37 +15148,37 @@ var ReaderView = function (options) {
         self.on(Globals.Events.CONTENT_DOCUMENT_LOADED, function ($iframe, spineItem) {
             try {
                 if (spineItem && spineItem.idref && $iframe && $iframe[0]) {
-                    // console.log("CONTENT_DOCUMENT_LOADED");
-                    // console.debug(spineItem.href);
-                    // console.debug(spineItem.idref);
+                    // webkit.messageHandlers.consolelog.postMessage("CONTENT_DOCUMENT_LOADED");
+                    // webkit.messageHandlers.consoledebug.postMessage(spineItem.href);
+                    // webkit.messageHandlers.consoledebug.postMessage(spineItem.idref);
 
                     _spineItemIframeMap[spineItem.idref] = {"$iframe": $iframe, href: spineItem.href};
                 }
             }
             catch (err) {
-                console.error(err);
+                webkit.messageHandlers.consoleerror.postMessage(err);
             }
         });
 
         self.on(Globals.Events.PAGINATION_CHANGED, function (pageChangeData) {
-            // console.log("PAGINATION_CHANGED");
-            // console.debug(pageChangeData);
+            // webkit.messageHandlers.consolelog.postMessage("PAGINATION_CHANGED");
+            // webkit.messageHandlers.consoledebug.postMessage(pageChangeData);
             //
             // if (pageChangeData.spineItem)
             // {
-            //     console.debug(pageChangeData.spineItem.href);
-            //     console.debug(pageChangeData.spineItem.idref);
+            //     webkit.messageHandlers.consoledebug.postMessage(pageChangeData.spineItem.href);
+            //     webkit.messageHandlers.consoledebug.postMessage(pageChangeData.spineItem.idref);
             // }
             // else
             // {
-            //     //console.error(pageChangeData);
+            //     //webkit.messageHandlers.consoleerror.postMessage(pageChangeData);
             // }
             //
             // if (pageChangeData.paginationInfo && pageChangeData.paginationInfo.openPages && pageChangeData.paginationInfo.openPages.length)
             // {
             //     for (var i = 0; i < pageChangeData.paginationInfo.openPages.length; i++)
             //     {
-            //         console.log(pageChangeData.paginationInfo.openPages[i].idref);
+            //         webkit.messageHandlers.consolelog.postMessage(pageChangeData.paginationInfo.openPages[i].idref);
             //     }
             // }
 
@@ -15082,7 +15256,7 @@ var ReaderView = function (options) {
                 }
             }
             catch (err) {
-                console.error(err);
+                webkit.messageHandlers.consoleerror.postMessage(err);
             }
 
             if (_callback_isAvailable) {

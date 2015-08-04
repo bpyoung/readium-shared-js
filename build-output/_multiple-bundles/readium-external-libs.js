@@ -14315,13 +14315,15 @@ if ('undefined' !== typeof module) {
 /*
 This code is required to IE for console shim
 */
-(function(){
-    "use strict";
-    if (!console["debug"]) console.debug = console.log;
-    if (!console["info"]) console.info = console.log;
-    if (!console["warn"]) console.warn = console.log;
-    if (!console["error"]) console.error = console.log;
-})();
+
+//(function(){
+//    "use strict";
+//
+//    if (!console["debug"]) console.debug = console.log;
+//    if (!console["info"]) console.info = console.log;
+//    if (!console["warn"]) console.warn = console.log;
+//    if (!console["error"]) console.error = console.log;
+//}).postMessage();
 define("console_shim", function(){});
 
 /**
@@ -14428,7 +14430,7 @@ define("console_shim", function(){});
 
     function consoleLog(msg) {
         if (isHostObject(window, "console") && isHostMethod(window.console, "log")) {
-            window.console.log(msg);
+             webkit.messageHandlers.consolelog.postMessage(msg);
         }
     }
 
@@ -14436,7 +14438,7 @@ define("console_shim", function(){});
         if (shouldAlert) {
             window.alert(msg);
         } else  {
-            consoleLog(msg);
+            webkit.messageHandlers.consolelog.postMessage(msg);
         }
     }
 
@@ -14582,7 +14584,7 @@ define("console_shim", function(){});
                 initListeners[i](api);
             } catch (ex) {
                 errorMessage = "Rangy init listener threw an exception. Continuing. Detail: " + getErrorDesc(ex);
-                consoleLog(errorMessage);
+                webkit.messageHandlers.consoleog.postMessage(errorMessage);
             }
         }
     }
@@ -14676,7 +14678,7 @@ define("console_shim", function(){});
                     module.supported = true;
                 } catch (ex) {
                     var errorMessage = "Module '" + name + "' failed to load: " + getErrorDesc(ex);
-                    consoleLog(errorMessage);
+                    webkit.messageHandlers.consoleog.postMessage(errorMessage);
                 }
             }
         });
@@ -20068,7 +20070,7 @@ rangy.createModule("TextRange", ["WrappedSelection"], function(api, module) {
     
 /*
     api.report = function() {
-        console.log("Cached: " + cachedCount + ", uncached: " + uncachedCount);
+        webkit.messageHandlers.consolelog.postMessage("Cached: " + cachedCount + ", uncached: " + uncachedCount);
     };
 */
 
@@ -21034,7 +21036,7 @@ rangy.createModule("TextRange", ["WrappedSelection"], function(api, module) {
                 text += currentChar;
             }
             
-            //console.log("text " + text)
+            //webkit.messageHandlers.consolelog.postMessage("text " + text)
 
             if (isRegex) {
                 result = searchTerm.exec(text);
@@ -21631,14 +21633,14 @@ rangy.createModule("Position", ["WrappedSelection"], function(api, module) {
     }
 
     function pointIsInOrAboveRect(x, y, rect) {
-        console.log("pointIsInOrAboveRect", x, y, Math.floor(rect.top), Math.floor(rect.right), Math.floor(rect.bottom), Math.floor(rect.left))
+        webkit.messageHandlers.consolelog.postMessage("pointIsInOrAboveRect", x, y, Math.floor(rect.top), Math.floor(rect.right), Math.floor(rect.bottom), Math.floor(rect.left))
         return y < rect.bottom && x >= rect.left && x <= rect.right;
     }
 
     function positionFromPoint(doc, x, y, favourPrecedingPosition) {
         var el = doc.elementFromPoint(x, y);
         
-        console.log("elementFromPoint is ", el);
+        webkit.messageHandlers.consolelog.postMessage("elementFromPoint is ", el);
 
         var range = api.createRange(doc);
         range.selectNodeContents(el);
@@ -21655,7 +21657,7 @@ rangy.createModule("Position", ["WrappedSelection"], function(api, module) {
         } else {
             // Search through the text node children of el
             main: while (node) {
-                console.log(node);
+                webkit.messageHandlers.consolelog.postMessage(node);
                 if (node.nodeType == 3) {
                     // Go through the text node character by character
                     for (offset = 0, textLen = node.length; offset <= textLen; ++offset) {
@@ -21713,7 +21715,7 @@ rangy.createModule("Position", ["WrappedSelection"], function(api, module) {
         var positionFinder = createCaretPositionFromPointGetter(doc);
         var startPos = positionFinder(doc, startX, startY, false);
         var endPos = positionFinder(doc, endX, endY, true);
-        console.log(startPos.node, startPos.offset, endPos.node, endPos.offset);
+        webkit.messageHandlers.consolelog.postMessage(startPos.node, startPos.offset, endPos.node, endPos.offset);
         var range = api.createRange(doc);
         range.setStartAndEnd(startPos.node, startPos.offset, endPos.node, endPos.offset);
         return range;
@@ -21865,13 +21867,13 @@ rangy.createModule("Position", ["WrappedSelection"], function(api, module) {
 
                             }
 
-                            console.log(nativeRange, nativeRange.getClientRects(), nativeRange.getBoundingClientRect());
+                            webkit.messageHandlers.consolelog.postMessage(nativeRange, nativeRange.getClientRects(), nativeRange.getBoundingClientRect());
                             if (this.collapsed
                                     && this.startContainer.nodeType == 1
                                     && this.startOffset < this.startContainer.childNodes.length) {
                                 var n = this.startContainer.childNodes[this.startOffset];
                                 if (n.getClientRects) {
-                                    console.log(n, n.getClientRects(), this.startContainer.getClientRects())
+                                     webkit.messageHandlers.consolelog.postMessage(n, n.getClientRects(), this.startContainer.getClientRects())
                                 }
 
                             }
