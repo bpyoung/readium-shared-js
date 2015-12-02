@@ -12090,7 +12090,7 @@ return Package;
                         clonedDiv.style.fontFamily = FontLoader.referenceFontFamilies[j];
                         if (FontLoader.useAdobeBlank) {
                             referenceFontSize = FontLoader.adobeBlankReferenceSize;
-                            sizeWatcherDirection = SizeWatcher.directions.decrease;
+                            sizeWatcherDirection = SizeWatcher.directions.increase;
                             sizeWatcherDimension = SizeWatcher.dimensions.horizontal;
                         } else {
                             fontVariationKey = this._fontVariationKeyForFont(font);
@@ -15123,9 +15123,11 @@ var ReflowableView = function(options, reader){
         var useColumnCountNotWidth = _paginationInfo.visibleColumnCount > 1; // column-count == 1 does not work in Chrome, and is not needed anyway (HTML width is full viewport width, no Firefox video flickering)
         if (useColumnCountNotWidth) {
             _$epubHtml.css("width", _lastViewPortSize.width + "px");
+            _$epubHtml.css("column-width", "auto");
             _$epubHtml.css("column-count", _paginationInfo.visibleColumnCount);
         } else {
             _$epubHtml.css("width", (_htmlBodyIsVerticalWritingMode ? _lastViewPortSize.width : _paginationInfo.columnWidth) + "px");
+            _$epubHtml.css("column-count", "auto");
             _$epubHtml.css("column-width", _paginationInfo.columnWidth + "px");
         }
 

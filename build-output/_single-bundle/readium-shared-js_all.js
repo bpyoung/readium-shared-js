@@ -13484,7 +13484,7 @@ if ('undefined' !== typeof module) {
  * URI.js - Mutating URLs
  * IPv6 Support
  *
- * Version: 1.16.0
+ * Version: 1.17.0
  *
  * Author: Rodney Rehm
  * Web: http://medialize.github.io/URI.js/
@@ -13673,7 +13673,7 @@ if ('undefined' !== typeof module) {
  * URI.js - Mutating URLs
  * Second Level Domain (SLD) Support
  *
- * Version: 1.16.0
+ * Version: 1.17.0
  *
  * Author: Rodney Rehm
  * Web: http://medialize.github.io/URI.js/
@@ -13914,7 +13914,7 @@ if ('undefined' !== typeof module) {
 /*!
  * URI.js - Mutating URLs
  *
- * Version: 1.16.0
+ * Version: 1.17.0
  *
  * Author: Rodney Rehm
  * Web: http://medialize.github.io/URI.js/
@@ -13985,7 +13985,7 @@ if ('undefined' !== typeof module) {
     return this;
   }
 
-  URI.version = '1.16.0';
+  URI.version = '1.17.0';
 
   var p = URI.prototype;
   var hasOwn = Object.prototype.hasOwnProperty;
@@ -14086,6 +14086,11 @@ if ('undefined' !== typeof module) {
     }
 
     return true;
+  }
+
+  function trimSlashes(text) {
+    var trim_expression = /^\/+|\/+$/g;
+    return text.replace(trim_expression, '');
   }
 
   URI._parts = function() {
@@ -14690,7 +14695,7 @@ if ('undefined' !== typeof module) {
           } else {
             data[name] = filterArrayValues(data[name], value);
           }
-        } else if (data[name] === value) {
+        } else if (data[name] === String(value) && (!isArray(value) || value.length === 1)) {
           data[name] = undefined;
         } else if (isArray(data[name])) {
           data[name] = filterArrayValues(data[name], value);
@@ -15131,6 +15136,27 @@ if ('undefined' !== typeof module) {
   };
 
   // compound accessors
+  p.origin = function(v, build) {
+    var parts;
+
+    if (this._parts.urn) {
+      return v === undefined ? '' : this;
+    }
+
+    if (v === undefined) {
+      var protocol = this.protocol();
+      var authority = this.authority();
+      if (!authority) return '';
+      return (protocol ? protocol + '://' : '') + this.authority();
+    } else {
+      var origin = URI(v);
+      this
+        .protocol(origin.protocol())
+        .authority(origin.authority())
+        .build(!build);
+      return this;
+    }
+  };
   p.host = function(v, build) {
     if (this._parts.urn) {
       return v === undefined ? '' : this;
@@ -15505,9 +15531,10 @@ if ('undefined' !== typeof module) {
             segments.pop();
           }
 
-          segments.push(v[i]);
+          segments.push(trimSlashes(v[i]));
         }
       } else if (v || typeof v === 'string') {
+        v = trimSlashes(v);
         if (segments[segments.length -1] === '') {
           // empty trailing elements have to be overwritten
           // to prevent results such as /foo//bar
@@ -15518,7 +15545,7 @@ if ('undefined' !== typeof module) {
       }
     } else {
       if (v) {
-        segments[segment] = v;
+        segments[segment] = trimSlashes(v);
       } else {
         segments.splice(segment, 1);
       }
@@ -15884,7 +15911,7 @@ if ('undefined' !== typeof module) {
 
       var uri = this.absoluteTo(base._parts.path);
 
-      if (base._parts.path.indexOf("chrome-extension:") !== -1) {
+      if (base._parts.path.indexOf("chrome-extension:") !== -1 || base._parts.path.indexOf("http:") !== -1 || base._parts.path.indexOf("https:") !== -1) {
 
         return new URI('filesystem:' + uri.toString());
       }
@@ -37672,7 +37699,7 @@ return Package;
                         clonedDiv.style.fontFamily = FontLoader.referenceFontFamilies[j];
                         if (FontLoader.useAdobeBlank) {
                             referenceFontSize = FontLoader.adobeBlankReferenceSize;
-                            sizeWatcherDirection = SizeWatcher.directions.decrease;
+                            sizeWatcherDirection = SizeWatcher.directions.increase;
                             sizeWatcherDimension = SizeWatcher.dimensions.horizontal;
                         } else {
                             fontVariationKey = this._fontVariationKeyForFont(font);
@@ -40705,9 +40732,11 @@ var ReflowableView = function(options, reader){
         var useColumnCountNotWidth = _paginationInfo.visibleColumnCount > 1; // column-count == 1 does not work in Chrome, and is not needed anyway (HTML width is full viewport width, no Firefox video flickering)
         if (useColumnCountNotWidth) {
             _$epubHtml.css("width", _lastViewPortSize.width + "px");
+            _$epubHtml.css("column-width", "auto");
             _$epubHtml.css("column-count", _paginationInfo.visibleColumnCount);
         } else {
             _$epubHtml.css("width", (_htmlBodyIsVerticalWritingMode ? _lastViewPortSize.width : _paginationInfo.columnWidth) + "px");
+            _$epubHtml.css("column-count", "auto");
             _$epubHtml.css("column-width", _paginationInfo.columnWidth + "px");
         }
 
